@@ -37,6 +37,8 @@ var (
 	version        = flag.Bool("version", false, "Show version info")
 )
 
+// --addr=127.0.0.1:9091 --addr-store=etcd://180.76.183.68:2379 --discovery --namespace=test
+
 func main() {
 	flag.Parse()
 
