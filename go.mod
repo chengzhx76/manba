@@ -16,7 +16,7 @@ require (
 	github.com/fagongzi/util v0.0.0-20180330021808-4acf02da76a9
 	github.com/garyburd/redigo v0.0.0-20180228092057-a69d19351219
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/gogo/protobuf v0.0.0-20171007142547-342cbe0a0415
+	github.com/gogo/protobuf v1.3.1
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
 	github.com/golang/groupcache v0.0.0-20181024230925-c65c006176ff // indirect
 	github.com/golang/protobuf v0.0.0-20180430185241-b4deda0973fb
