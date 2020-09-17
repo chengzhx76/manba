@@ -3,18 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/coreos/etcd/clientv3"
+	"github.com/labstack/echo"
+	"manba/pkg/util"
 	"os"
 	"os/signal"
 	"runtime"
 	"syscall"
 	"time"
 
-	"manba/pkg/util"
-
-	"github.com/coreos/etcd/clientv3"
 	"github.com/fagongzi/grpcx"
 	"github.com/fagongzi/log"
-	"github.com/labstack/echo"
 	"google.golang.org/grpc"
 	"manba/pkg/pb/rpcpb"
 	"manba/pkg/service"
@@ -62,30 +61,34 @@ func main() {
 
 	db, err := store.GetStoreFrom(*addrStore, fmt.Sprintf("/%s", *namespace), *addrStoreUser, *addrStorePwd)
 	if err != nil {
-		log.Fatalf("init store failed for %s, errors:\n%+v",
-			*addrStore,
-			err)
+		log.Fatalf("init store failed for %s, errors:\n%+v", *addrStore, err)
 	}
 
 	service.Init(db)
 
 	var opts []grpcx.ServerOption
 	if *discovery {
-		opts = append(opts, grpcx.WithEtcdPublisher(db.Raw().(*clientv3.Client), *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout)))
+		etcdPublisher := grpcx.WithEtcdPublisher(db.Raw().(*clientv3.Client), *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout))
+		opts = append(opts, etcdPublisher)
 	}
 
 	if *addrHTTP != "" {
-		opts = append(opts, grpcx.WithHTTPServer(*addrHTTP, func(server *echo.Echo) {
+		initHttpRouterFunc := func(server *echo.Echo) {
 			service.InitHTTPRouter(server, *ui, *uiPrefix)
-		}))
+		}
+		httpServer := grpcx.WithHTTPServer(*addrHTTP, initHttpRouterFunc)
+		opts = append(opts, httpServer)
 	}
 
-	s := grpcx.NewGRPCServer(*addr, func(svr *grpc.Server) []grpcx.Service {
+	servicesFunc := func(svr *grpc.Server) []grpcx.Service {
 		var services []grpcx.Service
 		rpcpb.RegisterMetaServiceServer(svr, service.MetaService)
-		services = append(services, grpcx.NewService(rpcpb.ServiceMeta, nil))
+		_service := grpcx.NewService(rpcpb.ServiceMeta, nil)
+		services = append(services, _service)
 		return services
-	}, opts...)
+	}
+
+	s := grpcx.NewGRPCServer(*addr, servicesFunc, opts...)
 
 	log.Infof("api server listen at %s", *addr)
 	go s.Start()
