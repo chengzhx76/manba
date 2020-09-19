@@ -109,8 +109,8 @@ func main() {
 
 	if *addrPPROF != "" {
 		go func() {
-			log.Errorf("start pprof failed, errors:\n%+v",
-				http.ListenAndServe(*addrPPROF, nil))
+			err := http.ListenAndServe(*addrPPROF, nil)
+			log.Errorf("start pprof failed, errors:\n%+v", err)
 		}()
 	}
 
@@ -122,11 +122,7 @@ func main() {
 
 func waitStop(p *proxy.Proxy) {
 	sc := make(chan os.Signal, 1)
-	signal.Notify(sc,
-		syscall.SIGHUP,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
+	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	sig := <-sc
 	p.Stop()

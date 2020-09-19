@@ -15,6 +15,7 @@ type metaService struct {
 	db store.Store
 }
 
+// by cheng 这是rpc的服务端，实现了 grpc 的接口
 func newMetaService(db store.Store) rpcpb.MetaServiceServer {
 	return &metaService{
 		db: db,

@@ -37,6 +37,7 @@ var (
 )
 
 // --addr=127.0.0.1:9091 --addr-store=etcd://180.76.183.68:2379 --discovery --namespace=test
+// https://www.jianshu.com/p/431abe0d2ed5
 
 func main() {
 	flag.Parse()
@@ -68,7 +69,8 @@ func main() {
 
 	var opts []grpcx.ServerOption
 	if *discovery {
-		etcdPublisher := grpcx.WithEtcdPublisher(db.Raw().(*clientv3.Client), *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout))
+		dbClient := db.Raw().(*clientv3.Client)
+		etcdPublisher := grpcx.WithEtcdPublisher(dbClient, *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout))
 		opts = append(opts, etcdPublisher)
 	}
 
@@ -82,27 +84,24 @@ func main() {
 
 	servicesFunc := func(svr *grpc.Server) []grpcx.Service {
 		var services []grpcx.Service
+		// by cheng 注册 rpc 服务
 		rpcpb.RegisterMetaServiceServer(svr, service.MetaService)
 		_service := grpcx.NewService(rpcpb.ServiceMeta, nil)
 		services = append(services, _service)
 		return services
 	}
 
-	s := grpcx.NewGRPCServer(*addr, servicesFunc, opts...)
+	grpcServer := grpcx.NewGRPCServer(*addr, servicesFunc, opts...)
 
 	log.Infof("api server listen at %s", *addr)
-	go s.Start()
+	go grpcServer.Start()
 
-	waitStop(s)
+	waitStop(grpcServer)
 }
 
 func waitStop(s *grpcx.GRPCServer) {
 	sc := make(chan os.Signal, 1)
-	signal.Notify(sc,
-		syscall.SIGHUP,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
+	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	sig := <-sc
 	s.GracefulStop()
