@@ -8,18 +8,12 @@ import (
 )
 
 func initClusterRouter(server *echo.Group) {
-	server.GET("/clusters/:id",
-		grpcx.NewGetHTTPHandle(idParamFactory, getClusterHandler))
-	server.GET("/clusters/:id/binds",
-		grpcx.NewGetHTTPHandle(idParamFactory, bindsClusterHandler))
-	server.DELETE("/clusters/:id",
-		grpcx.NewGetHTTPHandle(idParamFactory, deleteClusterHandler))
-	server.DELETE("/clusters/:id/binds",
-		grpcx.NewGetHTTPHandle(idParamFactory, deleteClusterBindsHandler))
-	server.PUT("/clusters",
-		grpcx.NewJSONBodyHTTPHandle(putClusterFactory, postClusterHandler))
-	server.GET("/clusters",
-		grpcx.NewGetHTTPHandle(limitQueryFactory, listClusterHandler))
+	server.GET("/clusters/:id", grpcx.NewGetHTTPHandle(idParamFactory, getClusterHandler))
+	server.GET("/clusters/:id/binds", grpcx.NewGetHTTPHandle(idParamFactory, bindsClusterHandler))
+	server.DELETE("/clusters/:id", grpcx.NewGetHTTPHandle(idParamFactory, deleteClusterHandler))
+	server.DELETE("/clusters/:id/binds", grpcx.NewGetHTTPHandle(idParamFactory, deleteClusterBindsHandler))
+	server.PUT("/clusters", grpcx.NewJSONBodyHTTPHandle(putClusterFactory, postClusterHandler))
+	server.GET("/clusters", grpcx.NewGetHTTPHandle(limitQueryFactory, listClusterHandler))
 }
 
 func postClusterHandler(value interface{}) (*grpcx.JSONResult, error) {

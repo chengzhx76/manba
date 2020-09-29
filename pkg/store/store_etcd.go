@@ -43,6 +43,7 @@ const (
 type EtcdStore struct {
 	sync.RWMutex
 
+	// 数据存储路径 start
 	prefix           string
 	clustersDir      string
 	serversDir       string
@@ -53,6 +54,7 @@ type EtcdStore struct {
 	pluginsDir       string
 	appliedPluginDir string
 	idPath           string
+	// 数据存储路径 end
 
 	idLock sync.Mutex
 	base   uint64
@@ -83,7 +85,9 @@ func NewEtcdStore(etcdAddrs []string, prefix string, basicAuth BasicAuth) (Store
 	}
 
 	config := &clientv3.Config{
-		Endpoints:   etcdAddrs,
+		// etcd的多个节点服务地址
+		Endpoints: etcdAddrs,
+		// 创建client的首次连接超时时间
 		DialTimeout: DefaultTimeout,
 	}
 	if basicAuth.userName != "" {
@@ -93,14 +97,17 @@ func NewEtcdStore(etcdAddrs []string, prefix string, basicAuth BasicAuth) (Store
 		config.Password = basicAuth.password
 	}
 
+	// 初始化 edct 返回 etcd 客户端
 	cli, err := clientv3.New(*config)
 
 	if err != nil {
 		return nil, err
 	}
 
+	// etcd 客户端
 	store.rawClient = cli
 
+	// 初始化事件对应
 	store.init()
 	return store, nil
 }

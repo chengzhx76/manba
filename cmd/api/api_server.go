@@ -50,54 +50,75 @@ func main() {
 	log.InitLog()
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	log.Infof("addr: %s", *addr)
-	log.Infof("addr-store: %s", *addrStore)
-	log.Infof("addr-store-user: %s", *addrStoreUser)
-	log.Infof("addr-store-pwd: %s", *addrStorePwd)
-	log.Infof("namespace: %s", *namespace)
+	log.Infof("addr: %s", *addr)                     // 请求地址
+	log.Infof("addr-store: %s", *addrStore)          // etcd 地址
+	log.Infof("addr-store-user: %s", *addrStoreUser) // etcd 用户
+	log.Infof("addr-store-pwd: %s", *addrStorePwd)   // etcd 密码
+	log.Infof("namespace: %s", *namespace)           // etcd 命名空间
 	log.Infof("discovery: %v", *discovery)
 	log.Infof("service-prefix: %s", *servicePrefix)
 	log.Infof("publish-lease: %d", *publishLease)
 	log.Infof("publish-timeout: %d", *publishTimeout)
 
+	// 初始化DB
 	db, err := store.GetStoreFrom(*addrStore, fmt.Sprintf("/%s", *namespace), *addrStoreUser, *addrStorePwd)
 	if err != nil {
 		log.Fatalf("init store failed for %s, errors:\n%+v", *addrStore, err)
 	}
 
+	// 服务关联db
 	service.Init(db)
 
 	var opts []grpcx.ServerOption
 	if *discovery {
 		dbClient := db.Raw().(*clientv3.Client)
+		// 准备 etcdPublisher 参数
 		etcdPublisher := grpcx.WithEtcdPublisher(dbClient, *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout))
 		opts = append(opts, etcdPublisher)
 	}
 
 	if *addrHTTP != "" {
 		initHttpRouterFunc := func(server *echo.Echo) {
+			// 初始化路由
 			service.InitHTTPRouter(server, *ui, *uiPrefix)
 		}
+		// 准备 http 参数
 		httpServer := grpcx.WithHTTPServer(*addrHTTP, initHttpRouterFunc)
 		opts = append(opts, httpServer)
 	}
 
-	servicesFunc := func(svr *grpc.Server) []grpcx.Service {
+	// 注册一个服务（对外提供的服务）
+	registerServices := func(grpcServer *grpc.Server) []grpcx.Service {
 		var services []grpcx.Service
-		// by cheng 注册 rpc 服务
-		rpcpb.RegisterMetaServiceServer(svr, service.MetaService)
+		// Server端注册 rpc 服务
+		rpcpb.RegisterMetaServiceServer(grpcServer, service.MetaService)
 		_service := grpcx.NewService(rpcpb.ServiceMeta, nil)
 		services = append(services, _service)
 		return services
 	}
 
-	grpcServer := grpcx.NewGRPCServer(*addr, servicesFunc, opts...)
+	// 注册 grpc 服务
+	grpcServer := grpcx.NewGRPCServer(*addr, registerServices, opts...)
 
 	log.Infof("api server listen at %s", *addr)
 	go grpcServer.Start()
 
 	waitStop(grpcServer)
 }
+
+/*
+ GRPC 的步骤
+	1.设置监听端口
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9000))
+	2.提供服务的对象
+	server := chat.Server{}
+	3.初始 grpc 服务
+	grpcServer := grpc.NewServer()
+	4.注册业务服务到 grpc 上
+	chat.RegisterChatServiceServer(grpcServer, &server)
+	5.端口和 grpc 服务绑定
+	err := grpcServer.Serve(lis)
+*/
 
 func waitStop(s *grpcx.GRPCServer) {
 	sc := make(chan os.Signal, 1)

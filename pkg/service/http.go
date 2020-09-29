@@ -14,6 +14,7 @@ const (
 // InitHTTPRouter init http router
 func InitHTTPRouter(server *echo.Echo, ui, uiPrefix string) {
 	versionGroup := server.Group(apiVersion)
+	// 初始化集群 API
 	initClusterRouter(versionGroup)
 	initServerRouter(versionGroup)
 	initBindRouter(versionGroup)
@@ -21,6 +22,7 @@ func InitHTTPRouter(server *echo.Echo, ui, uiPrefix string) {
 	initAPIRouter(versionGroup)
 	initPluginRouter(versionGroup)
 	initSystemRouter(versionGroup)
+	// 初始化静态文件 web
 	initStatic(server, ui, uiPrefix)
 }
 

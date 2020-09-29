@@ -121,13 +121,13 @@ func (p *Proxy) init() {
 }
 
 func (p *Proxy) initDispatcher() error {
-	s, err := store.GetStoreFrom(p.cfg.AddrStore, p.cfg.Namespace, p.cfg.AddrStoreUserName, p.cfg.AddrStorePwd)
+	_store, err := store.GetStoreFrom(p.cfg.AddrStore, p.cfg.Namespace, p.cfg.AddrStoreUserName, p.cfg.AddrStorePwd)
 
 	if err != nil {
 		return err
 	}
 
-	p.dispatcher = newDispatcher(p.cfg, s, p.runner, p.updateJSEngine)
+	p.dispatcher = newDispatcher(p.cfg, _store, p.runner, p.updateJSEngine)
 	return nil
 }
 

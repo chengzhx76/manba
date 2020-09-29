@@ -16,8 +16,7 @@ import (
 func (e *EtcdStore) Watch(evtCh chan *Evt, stopCh chan bool) error {
 	e.evtCh = evtCh
 
-	log.Infof("watch event at: <%s>",
-		e.prefix)
+	log.Infof("watch event at: <%s>", e.prefix)
 
 	e.doWatch()
 
@@ -25,25 +24,28 @@ func (e *EtcdStore) Watch(evtCh chan *Evt, stopCh chan bool) error {
 }
 
 func (e *EtcdStore) doWatch() {
+	// 创建一个watcher(监听器)
 	watcher := clientv3.NewWatcher(e.rawClient)
 	defer watcher.Close()
 
 	ctx := e.rawClient.Ctx()
 	for {
-		rch := watcher.Watch(ctx, e.prefix, clientv3.WithPrefix())
-		for wresp := range rch {
-			if wresp.Canceled {
+		// 监听 `prefix` 数据变动
+		watchChan := watcher.Watch(ctx, e.prefix, clientv3.WithPrefix())
+		for watchResp := range watchChan {
+			// 是否被取消
+			if watchResp.Canceled {
 				return
 			}
 
-			for _, ev := range wresp.Events {
+			for _, ev := range watchResp.Events {
 				var evtSrc EvtSrc
 				var evtType EvtType
 
 				switch ev.Type {
-				case mvccpb.DELETE:
+				case mvccpb.DELETE: // 删除事件
 					evtType = EventTypeDelete
-				case mvccpb.PUT:
+				case mvccpb.PUT: // 创建和修改事件
 					if ev.IsCreate() {
 						evtType = EventTypeNew
 					} else if ev.IsModify() {
@@ -72,9 +74,7 @@ func (e *EtcdStore) doWatch() {
 					continue
 				}
 
-				log.Debugf("watch event: <%s, %v>",
-					key,
-					evtType)
+				log.Debugf("watch event: <%s, %v>", key, evtType)
 				e.evtCh <- e.watchMethodMapping[evtSrc](evtType, ev.Kv)
 			}
 		}
