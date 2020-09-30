@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fagongzi/grpcx"
 	"github.com/fagongzi/log"
 	"google.golang.org/grpc"
+	"manba/grpcx"
 	"manba/pkg/pb/rpcpb"
 	"manba/pkg/service"
 	"manba/pkg/store"

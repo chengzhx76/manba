@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/coreos/etcd/clientv3"
-	"github.com/fagongzi/grpcx"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"manba/grpcx"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/pb/rpcpb"
 )
