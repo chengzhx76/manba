@@ -24,8 +24,7 @@ func WithEtcdPublisher(client *clientv3.Client, prefix string, ttl int64, timeou
 	return func(opts *serverOptions) {
 		p, err := newEtcdPublisher(client, prefix, ttl, timeout)
 		if err != nil {
-			log.Fatalf("rpc: use etcd service publish failed, errors:\n%+v",
-				err)
+			log.Fatalf("rpc: use etcd service publish failed, errors:\n%+v", err)
 		}
 		opts.publisher = p
 	}

@@ -46,9 +46,7 @@ func (s *GRPCServer) Start() error {
 
 	lis, err := net.Listen("tcp", s.addr)
 	if err != nil {
-		log.Fatalf("rpc: start grpc server failed at %s errors:\n %+v",
-			s.addr,
-			err)
+		log.Fatalf("rpc: start grpc server failed at %s errors:\n %+v", s.addr, err)
 		return err
 	}
 
