@@ -3,21 +3,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/coreos/etcd/clientv3"
-	"github.com/labstack/echo"
-	"manba/pkg/util"
 	"os"
 	"os/signal"
 	"runtime"
 	"syscall"
 	"time"
 
-	"github.com/fagongzi/log"
-	"google.golang.org/grpc"
 	"manba/grpcx"
 	"manba/pkg/pb/rpcpb"
 	"manba/pkg/service"
 	"manba/pkg/store"
+	"manba/pkg/util"
+
+	"github.com/coreos/etcd/clientv3"
+	"github.com/fagongzi/log"
+	"github.com/labstack/echo"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -55,10 +56,10 @@ func main() {
 	log.Infof("addr-store-user: %s", *addrStoreUser) // etcd 用户
 	log.Infof("addr-store-pwd: %s", *addrStorePwd)   // etcd 密码
 	log.Infof("namespace: %s", *namespace)           // etcd 命名空间
-	log.Infof("discovery: %v", *discovery)
+	log.Infof("discovery: %v", *discovery)           // 是否使用 etcd 做服务发现
 	log.Infof("service-prefix: %s", *servicePrefix)
-	log.Infof("publish-lease: %d", *publishLease)
-	log.Infof("publish-timeout: %d", *publishTimeout)
+	log.Infof("publish-lease: %d", *publishLease)     // 租约时间
+	log.Infof("publish-timeout: %d", *publishTimeout) // 发布服务的超时时间
 
 	// 初始化DB
 	db, err := store.GetStoreFrom(*addrStore, fmt.Sprintf("/%s", *namespace), *addrStoreUser, *addrStorePwd)
@@ -70,9 +71,9 @@ func main() {
 	service.Init(db)
 
 	var opts []grpcx.ServerOption
-	if *discovery {
+	if *discovery { // 服务发现
 		dbClient := db.Raw().(*clientv3.Client)
-		// 准备 etcdPublisher 参数
+		// 使用 etcd 发布一个服务
 		etcdPublisher := grpcx.WithEtcdPublisher(dbClient, *servicePrefix, *publishLease, time.Second*time.Duration(*publishTimeout))
 		opts = append(opts, etcdPublisher)
 	}
@@ -82,7 +83,7 @@ func main() {
 			// 初始化路由
 			service.InitHTTPRouter(server, *ui, *uiPrefix)
 		}
-		// 准备 http 参数
+		// 发布 http 服务
 		httpServer := grpcx.WithHTTPServer(*addrHTTP, initHttpRouterFunc)
 		opts = append(opts, httpServer)
 	}

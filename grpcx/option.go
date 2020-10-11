@@ -20,6 +20,7 @@ type serverOptions struct {
 }
 
 // WithEtcdPublisher use etcd to publish service
+// 使用 etcd 发布一个服务 服务发现
 func WithEtcdPublisher(client *clientv3.Client, prefix string, ttl int64, timeout time.Duration) ServerOption {
 	return func(opts *serverOptions) {
 		p, err := newEtcdPublisher(client, prefix, ttl, timeout)
