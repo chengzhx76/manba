@@ -51,5 +51,9 @@ func (p *etcdPublisher) Publish(service string, meta naming.Update) error {
 
 	ctx, cancel = context.WithTimeout(p.client.Ctx(), p.timeout)
 	defer cancel()
+
+	// etcd用于grpc命名解析与服务发现 https://blog.csdn.net/ys5773477/article/details/80216208
+	// gRPC Name Resolver 原理及实践 https://xiaomi-info.github.io/2019/12/31/grpc-custom-ns/
+
 	return p.resolver.Update(ctx, fmt.Sprintf("%s/%s", p.prefix, service), meta, clientv3.WithLease(clientv3.LeaseID(leaseResp.ID)))
 }
