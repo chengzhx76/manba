@@ -35,6 +35,7 @@ func (p *etcdPublisher) Publish(service string, meta naming.Update) error {
 	lessor := clientv3.NewLease(p.client)
 	defer lessor.Close()
 
+	// 设置租约时间的超时时间
 	ctx, cancel := context.WithTimeout(p.client.Ctx(), p.timeout)
 	// 设置租约时间
 	leaseResp, err := lessor.Grant(ctx, p.ttl)
@@ -57,5 +58,5 @@ func (p *etcdPublisher) Publish(service string, meta naming.Update) error {
 	// http://morecrazy.github.io/2018/08/14/grpc-go%E5%9F%BA%E4%BA%8Eetcd%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E6%9C%BA%E5%88%B6/
 
 	// 将本服务注册添加etcd中，服务名称为 %s/%s，服务地址为 meta 里的地址
-	return p.resolver.Update(ctx, fmt.Sprintf("%s/%s", p.prefix, service), meta, clientv3.WithLease(clientv3.LeaseID(leaseResp.ID)))
+	return p.resolver.Update(ctx, fmt.Sprintf("%s/%s", p.prefix, service), meta, clientv3.WithLease(leaseResp.ID))
 }

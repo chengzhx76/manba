@@ -55,8 +55,7 @@ type Client interface {
 
 // NewClient returns a gateway client, using direct address
 func NewClient(timeout time.Duration, addrs ...string) (Client, error) {
-	return newDiscoveryClient(grpcx.WithDirectAddresses(addrs...),
-		grpcx.WithTimeout(timeout))
+	return newDiscoveryClient(grpcx.WithDirectAddresses(addrs...), grpcx.WithTimeout(timeout))
 }
 
 // NewClientWithEtcdDiscovery returns a gateway client, using etcd service discovery
@@ -69,8 +68,7 @@ func NewClientWithEtcdDiscovery(prefix string, timeout time.Duration, etcdAddrs 
 		return nil, err
 	}
 
-	return newDiscoveryClient(grpcx.WithEtcdServiceDiscovery(prefix, cli),
-		grpcx.WithTimeout(timeout))
+	return newDiscoveryClient(grpcx.WithEtcdServiceDiscovery(prefix, cli), grpcx.WithTimeout(timeout))
 }
 
 type client struct {

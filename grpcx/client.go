@@ -79,6 +79,8 @@ func (c *GRPCClient) createClient(name string) (interface{}, error) {
 	grpcOptions = append(grpcOptions, grpc.WithBlock())
 	grpcOptions = append(grpcOptions, grpc.WithBalancer(grpc.RoundRobin(c.opts.resolver)))
 
+	// etcd用于grpc命名解析与服务发现 https://blog.csdn.net/ys5773477/article/details/80216208
+	// 用 go-grpc 使用etcd发现 https://doczhcn.gitbook.io/etcd/index/index/grpc_naming
 	conn, err := grpc.Dial(fmt.Sprintf("%s/%s", c.opts.prefix, name), grpcOptions...)
 	if err != nil {
 		return nil, err
