@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/naming"
 )
 
+// 使用 etcd 发布服务的参数对象
 type etcdPublisher struct {
 	prefix   string
 	ttl      int64
@@ -18,6 +19,7 @@ type etcdPublisher struct {
 	resolver *etcdnaming.GRPCResolver
 }
 
+// 创建一个 etcd 发布对象
 func newEtcdPublisher(client *clientv3.Client, prefix string, ttl int64, timeout time.Duration) (Publisher, error) {
 	return &etcdPublisher{
 		prefix:  prefix,
@@ -30,6 +32,7 @@ func newEtcdPublisher(client *clientv3.Client, prefix string, ttl int64, timeout
 	}, nil
 }
 
+// 发布该服务
 func (p *etcdPublisher) Publish(service string, meta naming.Update) error {
 	// 申请租约
 	lessor := clientv3.NewLease(p.client)

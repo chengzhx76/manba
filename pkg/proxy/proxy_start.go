@@ -15,7 +15,9 @@ import (
 func (p *Proxy) Start() {
 	go p.listenToStop()
 
+	// 开始指标采集 推送到普罗米修斯
 	p.startMetrics()
+	// 开始任务
 	p.startReadyTasks()
 
 	if !p.cfg.Option.EnableWebSocket {
@@ -159,8 +161,7 @@ func (p *Proxy) startHTTPSWebSocketWithListener(l net.Listener) {
 func (p *Proxy) startHTTPCMUX() {
 	l, err := net.Listen("tcp", p.cfg.Addr)
 	if err != nil {
-		log.Fatalf("start http failed failed with %+v",
-			err)
+		log.Fatalf("start http failed failed with %+v", err)
 	}
 
 	m := cmux.New(l)
@@ -168,8 +169,7 @@ func (p *Proxy) startHTTPCMUX() {
 	go p.startHTTPWebSocketWithListener(m.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
 	err = m.Serve()
 	if err != nil {
-		log.Fatalf("start http failed failed with %+v",
-			err)
+		log.Fatalf("start http failed failed with %+v", err)
 	}
 }
 
@@ -180,8 +180,7 @@ func (p *Proxy) startHTTPSCMUX() {
 
 	l, err := net.Listen("tcp", p.cfg.AddrHTTPS)
 	if err != nil {
-		log.Fatalf("start https failed failed with %+v",
-			err)
+		log.Fatalf("start https failed failed with %+v", err)
 	}
 
 	m := cmux.New(l)
@@ -189,7 +188,6 @@ func (p *Proxy) startHTTPSCMUX() {
 	go p.startHTTPSWebSocketWithListener(m.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
 	err = m.Serve()
 	if err != nil {
-		log.Fatalf("start https failed failed with %+v",
-			err)
+		log.Fatalf("start https failed failed with %+v", err)
 	}
 }

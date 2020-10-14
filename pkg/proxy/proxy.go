@@ -337,18 +337,11 @@ func (p *Proxy) doCopy(req *copyReq) {
 
 	req.prepare()
 
-	log.Infof("%s: dispatch node %d copy to %s",
-		req.requestTag,
-		req.idx,
-		req.to.meta.Addr)
+	log.Infof("%s: dispatch node %d copy to %s", req.requestTag, req.idx, req.to.meta.Addr)
 
 	res, err := p.client.Do(req.origin, svr.meta.Addr, nil)
 	if err != nil {
-		log.Errorf("%s: dispatch node %d copy to %s with error %s",
-			req.requestTag,
-			req.idx,
-			req.to.meta.Addr,
-			err)
+		log.Errorf("%s: dispatch node %d copy to %s with error %s", req.requestTag, req.idx, req.to.meta.Addr, err)
 		fasthttp.ReleaseRequest(req.origin)
 		return
 	}
@@ -363,9 +356,7 @@ func (p *Proxy) doCopy(req *copyReq) {
 func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 	if dn.node.meta.UseDefault {
 		dn.maybeDone()
-		log.Infof("%s: dispatch node %d force using default",
-			dn.requestTag,
-			dn.idx)
+		log.Infof("%s: dispatch node %d force using default", dn.requestTag, dn.idx)
 		return
 	}
 
@@ -375,16 +366,11 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 		dn.err = ErrNoServer
 		dn.code = fasthttp.StatusServiceUnavailable
 		dn.maybeDone()
-		log.Infof("%s: dispatch node %d has no server, return with 503",
-			dn.requestTag,
-			dn.idx)
+		log.Infof("%s: dispatch node %d has no server, return with 503", dn.requestTag, dn.idx)
 		return
 	}
 
-	log.Debugf("%s: dispatch node %d to server %d",
-		dn.requestTag,
-		dn.idx,
-		svr.id)
+	log.Debugf("%s: dispatch node %d to server %d", dn.requestTag, dn.idx, svr.id)
 
 	forwardReq := copyRequest(&ctx.Request)
 
@@ -404,9 +390,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 			dn.code = fasthttp.StatusBadRequest
 			dn.maybeDone()
 
-			log.Warnf("%s: dispatch node %d rewrite not match, return with 400",
-				dn.requestTag,
-				dn.idx)
+			log.Warnf("%s: dispatch node %d rewrite not match, return with 400", dn.requestTag, dn.idx)
 			return
 		}
 	}
@@ -427,11 +411,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 		dn.maybeDone()
 		releaseContext(c)
 
-		log.Errorf("%s: dispatch node %d call filter %s pre failed with error %s",
-			dn.requestTag,
-			dn.idx,
-			filterName,
-			err)
+		log.Errorf("%s: dispatch node %d call filter %s pre failed with error %s", dn.requestTag, dn.idx, filterName, err)
 		return
 	}
 
@@ -440,9 +420,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 	if value := c.GetAttr(filter.AttrUsingCachingValue); nil != value { // hit cache
 		res = fasthttp.AcquireResponse()
 		filter.ReadCachedValueTo(value.(*goetty.ByteBuf), res)
-		log.Infof("%s: dispatch node %d using cache",
-			dn.requestTag,
-			dn.idx)
+		log.Infof("%s: dispatch node %d using cache", dn.requestTag, dn.idx)
 	} else if value := c.GetAttr(filter.AttrUsingResponse); nil != value { // using spec response
 		specRes, ok := value.(*fasthttp.Response)
 		if !ok {
@@ -451,24 +429,16 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 			dn.maybeDone()
 			releaseContext(c)
 
-			log.Errorf("%s: dispatch node %d using response attr with error %s",
-				dn.requestTag,
-				dn.idx,
-				dn.err)
+			log.Errorf("%s: dispatch node %d using response attr with error %s", dn.requestTag, dn.idx, dn.err)
 			return
 		}
 
-		log.Infof("%s: dispatch node %d using response attr",
-			dn.requestTag,
-			dn.idx)
+		log.Infof("%s: dispatch node %d using response attr", dn.requestTag, dn.idx)
 		res = specRes
 	} else {
 		times := int32(0)
 		for {
-			log.Infof("%s: dispatch node %d sent for %d times",
-				dn.requestTag,
-				dn.idx,
-				times)
+			log.Infof("%s: dispatch node %d sent for %d times", dn.requestTag, dn.idx, times)
 
 			if !dn.api.isWebSocket() {
 				dn.setHost(forwardReq)
@@ -491,18 +461,14 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 			}
 
 			// skip not match
-			if !dn.matchAllRetryStrategy() &&
-				!dn.matchRetryStrategy(int32(res.StatusCode())) {
+			if !dn.matchAllRetryStrategy() && !dn.matchRetryStrategy(int32(res.StatusCode())) {
 				break
 			}
 
 			// retry with strategiess
 			retry := dn.retryStrategy()
 			if times >= retry.MaxTimes {
-				log.Infof("%s: dispatch node %d sent times over the max %d",
-					dn.requestTag,
-					dn.idx,
-					retry.MaxTimes)
+				log.Infof("%s: dispatch node %d sent times over the max %d", dn.requestTag, dn.idx, retry.MaxTimes)
 				break
 			}
 
@@ -519,9 +485,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 				dn.code = fasthttp.StatusServiceUnavailable
 				dn.maybeDone()
 
-				log.Infof("%s: dispatch node %d has no server, return with 503",
-					dn.requestTag,
-					dn.idx)
+				log.Infof("%s: dispatch node %d has no server, return with 503", dn.requestTag, dn.idx)
 				return
 			}
 		}
@@ -532,16 +496,10 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 		resCode := fasthttp.StatusInternalServerError
 
 		if nil != err {
-			log.Errorf("%s: dispatch node %d failed with error %s",
-				dn.requestTag,
-				dn.idx,
-				err)
+			log.Errorf("%s: dispatch node %d failed with error %s", dn.requestTag, dn.idx, err)
 		} else {
 			resCode = res.StatusCode()
-			log.Errorf("%s: dispatch node %d failed with error code %d",
-				dn.requestTag,
-				dn.idx,
-				resCode)
+			log.Errorf("%s: dispatch node %d failed with error code %d", dn.requestTag, dn.idx, resCode)
 		}
 
 		p.doPostErrFilters(c, resCode, err, filters...)
@@ -554,22 +512,13 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 	}
 
 	if log.DebugEnabled() {
-		log.Debugf("%s: dispatch node %d return by %s with code %d, body <%s>",
-			dn.requestTag,
-			dn.idx,
-			svr.meta.Addr,
-			res.StatusCode(),
-			hack.SliceToString(res.Body()))
+		log.Debugf("%s: dispatch node %d return by %s with code %d, body <%s>", dn.requestTag, dn.idx, svr.meta.Addr, res.StatusCode(), hack.SliceToString(res.Body()))
 	}
 
 	// post filters
 	filterName, code, err = p.doPostFilters(dn.requestTag, c, filters...)
 	if nil != err {
-		log.Errorf("%s: dispatch node %d call filter %s post failed with error %s",
-			dn.requestTag,
-			dn.idx,
-			filterName,
-			err)
+		log.Errorf("%s: dispatch node %d call filter %s post failed with error %s", dn.requestTag, dn.idx, filterName, err)
 
 		dn.err = err
 		dn.code = code

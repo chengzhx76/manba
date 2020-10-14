@@ -52,6 +52,7 @@ func (s *GRPCServer) Start() error {
 
 	s.server = grpc.NewServer()
 	s.services = s.register(s.server)
+	// 把 server 端注册到 etcd 中
 	s.publishServices()
 
 	if s.opts.httpAddr != "" {
@@ -101,6 +102,7 @@ func (s *GRPCServer) publishServices() {
 	}
 }
 
+// 获取真实的 IP 地址
 func adjustAddr(addr string) string {
 	if addr[0] == ':' {
 		ips, err := intranetIP()

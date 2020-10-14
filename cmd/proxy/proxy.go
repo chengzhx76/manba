@@ -140,6 +140,7 @@ func waitStop(p *proxy.Proxy) {
 func getCfg() *proxy.Cfg {
 	cfg := &proxy.Cfg{
 		Option: &proxy.Option{},
+		// 从零搭建Prometheus监控报警系统 https://www.cnblogs.com/chenqionghe/p/10494868.html
 		Metric: util.NewMetricCfg(*metricJob, *metricInstance, *metricAddress, time.Second*time.Duration(*metricIntervalSync)),
 	}
 
