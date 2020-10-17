@@ -36,10 +36,7 @@ func (req *copyReq) prepare() {
 			req.origin.SetRequestURI(realPath)
 			req.origin.SetHost(req.to.meta.Addr)
 
-			log.Infof("%s: dispatch node %d rewrite url to %s for copy",
-				req.requestTag,
-				req.idx,
-				realPath)
+			log.Infof("%s: dispatch node %d rewrite url to %s for copy", req.requestTag, req.idx, realPath)
 		}
 	}
 }

@@ -11,8 +11,6 @@ import (
 
 	"github.com/fagongzi/goetty"
 	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
-	"github.com/fagongzi/util/task"
 	"github.com/valyala/fasthttp"
 	"manba/pkg/expr"
 	"manba/pkg/filter"
@@ -20,6 +18,8 @@ import (
 	"manba/pkg/plugin"
 	"manba/pkg/store"
 	"manba/pkg/util"
+	"manba/util/hack"
+	"manba/util/task"
 )
 
 var (
@@ -102,8 +102,7 @@ func NewProxy(cfg *Cfg) *Proxy {
 func (p *Proxy) init() {
 	err := p.initDispatcher()
 	if err != nil {
-		log.Fatalf("init route table failed, errors:\n%+v",
-			err)
+		log.Fatalf("init route table failed, errors:\n%+v", err)
 	}
 
 	p.initFilters()
@@ -113,8 +112,7 @@ func (p *Proxy) init() {
 		AddrRPC: p.cfg.AddrRPC,
 	}, p.cfg.TTLProxy)
 	if err != nil {
-		log.Fatalf("init route table failed, errors:\n%+v",
-			err)
+		log.Fatalf("init route table failed, errors:\n%+v", err)
 	}
 
 	p.dispatcher.load()
@@ -135,9 +133,7 @@ func (p *Proxy) initFilters() {
 	for _, filter := range p.cfg.Filers {
 		f, err := p.newFilter(filter)
 		if nil != err {
-			log.Fatalf("create filter failed, filter=<%+v> errors:\n%+v",
-				filter,
-				err)
+			log.Fatalf("create filter failed, filter=<%+v> errors:\n%+v", filter, err)
 		}
 
 		err = f.Init(filter.ExternalCfg)
@@ -379,10 +375,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 		// if not use rewrite, it only change uri path and query string
 		realPath := expr.Exec(dn.exprCtx, dn.node.parsedExprs...)
 		if len(realPath) != 0 {
-			log.Infof("%s: dispatch node %d rewrite url to %s",
-				dn.requestTag,
-				dn.idx,
-				hack.SliceToString(realPath))
+			log.Infof("%s: dispatch node %d rewrite url to %s", dn.requestTag, dn.idx, hack.SliceToString(realPath))
 
 			forwardReq.SetRequestURIBytes(realPath)
 		} else {
