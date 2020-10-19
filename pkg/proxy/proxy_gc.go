@@ -26,7 +26,7 @@ func (p *Proxy) readyToGCJSEngine() {
 				log.Info("stop: gc js engine stopped")
 				t.Stop()
 				return
-			case <-t.C:
+			case <-t.C: // 每一分钟执行一次
 				now := time.Now()
 				p.Lock()
 				var values []*plugin.Engine

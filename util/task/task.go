@@ -354,14 +354,12 @@ func (s *Runner) RunCancelableTask(task func(context.Context)) (uint64, error) {
 	id := s.lastID
 	s.cancels[id] = cancel
 	s.stop.Add(1)
-	fmt.Println("==========>RunCancelableTask0")
 	go func() {
-		fmt.Println("==========>RunCancelableTask00")
+		// TODO 这样写是不是有问题
 		if err := recover(); err != nil {
 			panic(err)
 		}
 		defer s.stop.Done()
-		fmt.Println("==========>RunCancelableTask")
 		task(ctx)
 	}()
 

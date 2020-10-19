@@ -8,14 +8,14 @@ import (
 
 	"github.com/fagongzi/goetty"
 	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
-	"github.com/fagongzi/util/task"
 	"github.com/valyala/fasthttp"
 	"manba/pkg/expr"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/route"
 	"manba/pkg/store"
 	"manba/pkg/util"
+	"manba/util/hack"
+	"manba/util/task"
 )
 
 type copyReq struct {
