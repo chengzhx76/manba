@@ -231,8 +231,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 		ctx.SetStatusCode(fasthttp.StatusNotFound)
 		releaseExprCtx(exprCtx)
 
-		log.Infof("%s: not match, return with 404",
-			requestTag)
+		log.Infof("%s: not match, return with 404", requestTag)
 		return
 	}
 
@@ -240,10 +239,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 	// avoid concurrent copy header bug
 	ctx.Request.Header.Peek("fuck")
 
-	log.Infof("%s: match api %s, has %d dispatches",
-		requestTag,
-		api.meta.Name,
-		len(dispatches))
+	log.Infof("%s: match api %s, has %d dispatches", requestTag, api.meta.Name, len(dispatches))
 
 	rd := acquireRender()
 	rd.init(requestTag, api, dispatches)
@@ -283,10 +279,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 		dn.rd = rd
 		dn.ctx = ctx
 		if dn.copyTo != nil {
-			log.Infof("%s: dispatch node %d copy to %s",
-				requestTag,
-				idx,
-				dn.copyTo.meta.Addr)
+			log.Infof("%s: dispatch node %d copy to %s", requestTag, idx, dn.copyTo.meta.Addr)
 
 			p.copies[getIndex(&p.copyIndex, p.cfg.Option.LimitCountCopyWorker)] <- &copyReq{
 				origin:     copyRequest(&ctx.Request),
@@ -320,8 +313,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 	p.postRequest(api, dispatches, startAt)
 	releaseExprCtx(exprCtx)
 
-	log.Debugf("%s: dispatch complete",
-		requestTag)
+	log.Debugf("%s: dispatch complete", requestTag)
 }
 
 func (p *Proxy) doCopy(req *copyReq) {
