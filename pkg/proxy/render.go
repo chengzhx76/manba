@@ -2,8 +2,8 @@ package proxy
 
 import (
 	"github.com/buger/jsonparser"
-	"github.com/fagongzi/log"
 	"github.com/valyala/fasthttp"
+	"manba/log"
 )
 
 var (

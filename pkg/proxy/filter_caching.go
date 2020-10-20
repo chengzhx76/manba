@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/fagongzi/goetty"
-	"github.com/fagongzi/util/hack"
 	"github.com/valyala/fasthttp"
 	"manba/pkg/filter"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/util"
+	"manba/util/hack"
 )
 
 var (

@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/fagongzi/log"
 	"github.com/labstack/echo"
 	"manba/grpcx"
+	"manba/log"
 )
 
 type backup struct {

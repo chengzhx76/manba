@@ -5,9 +5,9 @@ import (
 
 	"github.com/coreos/etcd/clientv3"
 	etcdnaming "github.com/coreos/etcd/clientv3/naming"
-	"github.com/fagongzi/log"
 	"github.com/labstack/echo"
 	"google.golang.org/grpc/naming"
+	"manba/log"
 )
 
 // ServerOption service side option

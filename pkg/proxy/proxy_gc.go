@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/fagongzi/log"
+	"manba/log"
 	"manba/pkg/plugin"
 )
 

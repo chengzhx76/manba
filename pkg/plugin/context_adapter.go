@@ -4,9 +4,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fagongzi/util/hack"
 	"github.com/valyala/fasthttp"
 	"manba/pkg/filter"
+	"manba/util/hack"
 )
 
 var (

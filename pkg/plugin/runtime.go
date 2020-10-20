@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/fagongzi/log"
 	"github.com/robertkrimen/otto"
+	"manba/log"
 	"manba/pkg/filter"
 	"manba/pkg/pb/metapb"
 )

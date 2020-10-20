@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/fagongzi/log"
+	"manba/log"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/plugin"
 	"manba/pkg/util"
@@ -49,8 +49,7 @@ func (r *dispatcher) loadProxies() {
 		return r.addProxy(value)
 	})
 	if nil != err {
-		log.Errorf("load proxies failed, errors:\n%+v",
-			err)
+		log.Errorf("load proxies failed, errors:\n%+v", err)
 		return
 	}
 }
@@ -75,8 +74,7 @@ func (r *dispatcher) loadServers() {
 		return r.addServer(value.(*metapb.Server))
 	})
 	if nil != err {
-		log.Errorf("load servers failed, errors:\n%+v",
-			err)
+		log.Errorf("load servers failed, errors:\n%+v", err)
 		return
 	}
 }
@@ -342,9 +340,7 @@ func (r *dispatcher) addServer(svr *metapb.Server) error {
 	r.addToCheck(rt)
 
 	r.servers = newValues
-	log.Infof("server <%d> added, data <%s>",
-		svr.ID,
-		svr.String())
+	log.Infof("server <%d> added, data <%s>", svr.ID, svr.String())
 
 	return nil
 }

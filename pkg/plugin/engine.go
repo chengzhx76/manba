@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/fagongzi/log"
+	"manba/log"
 	"manba/pkg/filter"
 	"manba/pkg/pb/metapb"
 )

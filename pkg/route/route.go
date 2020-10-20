@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
+	"manba/log"
 	"manba/pkg/pb/metapb"
+	"manba/util/hack"
 )
 
 type routeItem struct {

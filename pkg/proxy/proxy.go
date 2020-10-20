@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/fagongzi/goetty"
-	"github.com/fagongzi/log"
 	"github.com/valyala/fasthttp"
+	"manba/log"
 	"manba/pkg/expr"
 	"manba/pkg/filter"
 	"manba/pkg/pb/metapb"

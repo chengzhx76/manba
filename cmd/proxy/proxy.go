@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fagongzi/log"
+	"manba/log"
 	"manba/pkg/proxy"
 	"manba/pkg/util"
 )
@@ -90,6 +90,7 @@ func init() {
 	defaultFilters.Set(proxy.FilterJSPlugin)
 }
 
+// --addr=0.0.0.0:8076 --addr-rpc=0.0.0.0:9091 --addr-store=etcd://180.76.183.68:2379 --namespace=test
 func main() {
 	flag.Var(filters, "filter", "Plugin(Filter): format is <filter name>[:plugin file path][:plugin config file path]")
 	flag.Parse()

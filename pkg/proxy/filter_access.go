@@ -1,7 +1,7 @@
 package proxy
 
 import (
-	"github.com/fagongzi/log"
+	"manba/log"
 	"manba/pkg/filter"
 )
 

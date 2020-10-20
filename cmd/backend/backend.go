@@ -7,15 +7,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/fagongzi/util/format"
 	"github.com/labstack/echo"
 	md "github.com/labstack/echo/middleware"
+	"manba/util/format"
 )
 
 var (
 	addr = flag.String("addr", "127.0.0.1:9090", "addr for backend")
 )
 
+// nohup go run backend.go --addr=0.0.0.0:9000 >9000.log &
 func main() {
 	flag.Parse()
 

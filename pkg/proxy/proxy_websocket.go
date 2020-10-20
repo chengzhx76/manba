@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
 	"github.com/gorilla/websocket"
 	"github.com/koding/websocketproxy"
 	"github.com/valyala/fasthttp"
+	"manba/log"
+	"manba/util/hack"
 )
 
 const (

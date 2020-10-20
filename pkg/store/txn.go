@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/coreos/etcd/clientv3"
-	"github.com/fagongzi/log"
 	"golang.org/x/net/context"
+	"manba/log"
 )
 
 // slowLogTxn wraps etcd transaction and log slow one.

@@ -6,10 +6,10 @@ import (
 
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/mvcc/mvccpb"
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/format"
-	"github.com/fagongzi/util/protoc"
+	"manba/log"
 	"manba/pkg/pb/metapb"
+	"manba/util/format"
+	"manba/util/protoc"
 )
 
 // Watch watch event from etcd

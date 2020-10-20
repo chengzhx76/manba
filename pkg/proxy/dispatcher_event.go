@@ -3,10 +3,10 @@ package proxy
 import (
 	"math"
 
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/format"
+	"manba/log"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/store"
+	"manba/util/format"
 )
 
 var (

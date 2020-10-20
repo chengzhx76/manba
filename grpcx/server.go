@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/fagongzi/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/naming"
+	"manba/log"
 )
 
 // ServiceRegister registry grpc services

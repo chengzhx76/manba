@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/buger/jsonparser"
-	"github.com/fagongzi/util/hack"
 	"github.com/valyala/fasthttp"
+	"manba/util/hack"
 )
 
 const (

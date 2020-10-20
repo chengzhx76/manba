@@ -1,2 +1,11 @@
-https://github.com/DavidCai1993/my-blog/issues/35
+/software/etcd/etcd-v3.4.12-linux-amd64
+nohup ./etcd --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379 &
 
+/software/golang/src/manba/dist
+nohup ./manba-proxy --addr=0.0.0.0:8076 --addr-rpc=0.0.0.0:9091 --addr-store=etcd://180.76.183.68:2379 --namespace=test &
+
+nohup ./manba-apiserver --addr-http=0.0.0.0:9093 --addr=0.0.0.0:9091 --addr-store=etcd://180.76.183.68:2379 --discovery --namespace=test -ui=ui/dist &
+
+nohup go run backend.go --addr=localhost:9000 >9000.log &
+nohup go run backend.go --addr=localhost:9001 >9001.log &
+nohup go run backend.go --addr=localhost:9002 >9002.log &

@@ -9,7 +9,6 @@ import (
 
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/mvcc/mvccpb"
-	"github.com/fagongzi/util/format"
 	"golang.org/x/net/context"
 	"manba/pkg/client"
 	pbutil "manba/pkg/pb"
@@ -18,6 +17,7 @@ import (
 	"manba/pkg/plugin"
 	"manba/pkg/route"
 	"manba/pkg/util"
+	"manba/util/format"
 )
 
 var (

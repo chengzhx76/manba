@@ -4,8 +4,8 @@ import (
 	"sync"
 
 	"github.com/buger/jsonparser"
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
+	"manba/log"
+	"manba/util/hack"
 )
 
 type multiContext struct {

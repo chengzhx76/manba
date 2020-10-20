@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	"github.com/fagongzi/log"
+	"manba/log"
 )
 
 // LogModule log module

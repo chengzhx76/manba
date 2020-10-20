@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"manba/grpcx"
+	"manba/log"
 	"manba/pkg/pb/rpcpb"
 	"manba/pkg/service"
 	"manba/pkg/store"
 	"manba/pkg/util"
 
 	"github.com/coreos/etcd/clientv3"
-	"github.com/fagongzi/log"
 	"github.com/labstack/echo"
 	"google.golang.org/grpc"
 )
@@ -38,6 +38,7 @@ var (
 )
 
 // --addr=127.0.0.1:9091 --addr-store=etcd://180.76.183.68:2379 --discovery --namespace=test
+// --addr=0.0.0.0:9091 --addr-store=etcd://180.76.183.68:2379 --discovery --namespace=test --addr-http=0.0.0.0:9093 -ui=ui/dist
 // https://www.jianshu.com/p/431abe0d2ed5
 
 func main() {

@@ -10,10 +10,10 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/fagongzi/util/hack"
 	"github.com/garyburd/redigo/redis"
 	"github.com/valyala/fasthttp"
 	"manba/pkg/filter"
+	"manba/util/hack"
 )
 
 const (

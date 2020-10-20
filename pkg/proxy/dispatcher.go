@@ -4,18 +4,18 @@ import (
 	"sync"
 	"time"
 
-	"manba/pkg/plugin"
-
-	"github.com/fagongzi/goetty"
-	"github.com/fagongzi/log"
-	"github.com/valyala/fasthttp"
+	"manba/log"
 	"manba/pkg/expr"
 	"manba/pkg/pb/metapb"
+	"manba/pkg/plugin"
 	"manba/pkg/route"
 	"manba/pkg/store"
 	"manba/pkg/util"
 	"manba/util/hack"
 	"manba/util/task"
+
+	"github.com/fagongzi/goetty"
+	"github.com/valyala/fasthttp"
 )
 
 type copyReq struct {

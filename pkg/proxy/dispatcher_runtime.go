@@ -10,16 +10,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/buger/jsonparser"
-	"github.com/fagongzi/goetty"
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/hack"
-	pbutil "github.com/fagongzi/util/protoc"
-	"github.com/valyala/fasthttp"
+	"manba/log"
 	"manba/pkg/expr"
 	"manba/pkg/lb"
 	"manba/pkg/pb/metapb"
 	"manba/pkg/util"
+	"manba/util/hack"
+	pbutil "manba/util/protoc"
+
+	"github.com/buger/jsonparser"
+	"github.com/fagongzi/goetty"
+	"github.com/valyala/fasthttp"
 )
 
 var (

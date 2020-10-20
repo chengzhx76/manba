@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/fagongzi/goetty"
-	"github.com/fagongzi/log"
-	"github.com/fagongzi/util/atomic"
+	"manba/log"
+	"manba/util/atomic"
 )
 
 type point struct {
