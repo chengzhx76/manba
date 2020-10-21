@@ -11,8 +11,6 @@ require (
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/dgrijalva/jwt-go v3.1.0+incompatible
 	github.com/fagongzi/goetty v0.0.0-20180427060148-8f06d410550f
-	github.com/fagongzi/log v0.0.0-20170831135209-9a647df25e0e
-	github.com/fagongzi/util v0.0.0-20180330021808-4acf02da76a9
 	github.com/garyburd/redigo v0.0.0-20180228092057-a69d19351219
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/groupcache v0.0.0-20181024230925-c65c006176ff // indirect

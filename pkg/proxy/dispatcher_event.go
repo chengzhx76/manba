@@ -24,7 +24,7 @@ func (r *dispatcher) watch() {
 
 	go r.readyToReceiveWatchEvent()
 	err := r.store.Watch(r.watchEventC, r.watchStopC)
-	log.Errorf("router watch failed, errors:\n%+v", err)
+	log.Errorf("router watch failed, errors:%+v", err)
 }
 
 func (r *dispatcher) readyToReceiveWatchEvent() {

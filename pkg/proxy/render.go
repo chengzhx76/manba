@@ -135,8 +135,7 @@ func (rd *render) renderRaw(ctx *fasthttp.RequestCtx, dn *dispatchNode) {
 	ctx.Write(dn.getResponseBody())
 	dn.release()
 
-	log.Infof("%s: return with raw body",
-		rd.requestTag)
+	log.Infof("%s: return with raw body", rd.requestTag)
 }
 
 func (rd *render) renderDefault(ctx *fasthttp.RequestCtx) {

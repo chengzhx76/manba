@@ -251,9 +251,7 @@ func (r *dispatcher) dispatch(reqCtx *fasthttp.RequestCtx, requestTag string) (*
 	}
 
 	if targetAPI.meta.UseDefault {
-		log.Debugf("%s: match api %s, and use default force",
-			requestTag,
-			targetAPI.meta.Name)
+		log.Debugf("%s: match api %s, and use default force", requestTag, targetAPI.meta.Name)
 	} else {
 		for idx, node := range targetAPI.nodes {
 			dn := acquireDispathNode()
@@ -279,11 +277,7 @@ func (r *dispatcher) adjustByRouting(apiID uint64, reqCtx *fasthttp.RequestCtx, 
 
 	for _, routing := range routings {
 		if routing.isUp() && routing.matches(apiID, &reqCtx.Request, requestTag) {
-			log.Infof("%s: match routing %s, %s traffic to cluster %d",
-				requestTag,
-				routing.meta.Name,
-				routing.meta.Status.String(),
-				routing.meta.ClusterID)
+			log.Infof("%s: match routing %s, %s traffic to cluster %d", requestTag, routing.meta.Name, routing.meta.Status.String(), routing.meta.ClusterID)
 
 			svr := r.selectServerFromCluster(reqCtx, routing.meta.ClusterID)
 

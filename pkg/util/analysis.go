@@ -117,9 +117,7 @@ func (a *Analysis) AddTarget(key uint64, interval time.Duration) {
 	t, _ := a.tw.Schedule(interval, a.recentlyTimeout, recently)
 	recently.timeout = t
 
-	log.Infof("analysis: added, key=<%d> interval=<%s>",
-		key,
-		interval)
+	log.Infof("analysis: added, key=<%d> interval=<%s>", key, interval)
 }
 
 // GetRecentlyRequestCount return the server request count in spec duration

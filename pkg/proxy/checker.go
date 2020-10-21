@@ -117,23 +117,14 @@ func (r *dispatcher) doCheck(svr *serverRuntime) bool {
 	}
 
 	if fasthttp.StatusOK != resp.StatusCode() {
-		log.Warnf("server <%d, %s, %d, %d> check failed",
-			svr.meta.ID,
-			svr.getCheckURL(),
-			resp.StatusCode(),
-			svr.checkFailCount+1)
+		log.Warnf("server <%d, %s, %d, %d> check failed", svr.meta.ID, svr.getCheckURL(), resp.StatusCode(), svr.checkFailCount+1)
 		svr.fail()
 		return false
 	}
 
 	if svr.meta.HeathCheck.Body != "" &&
 		svr.meta.HeathCheck.Body != string(resp.Body()) {
-		log.Warnf("server <%s, %s, %d> check failed, body <%s>, expect <%s>",
-			svr.meta.Addr,
-			svr.getCheckURL(),
-			svr.checkFailCount+1,
-			resp.Body(),
-			svr.meta.HeathCheck.Body)
+		log.Warnf("server <%s, %s, %d> check failed, body <%s>, expect <%s>", svr.meta.Addr, svr.getCheckURL(), svr.checkFailCount+1, resp.Body(), svr.meta.HeathCheck.Body)
 		svr.fail()
 		return false
 	}

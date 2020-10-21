@@ -21,9 +21,7 @@ func (f *Proxy) doPreFilters(requestTag string, c filter.Context, filters ...fil
 		}
 
 		if statusCode == filter.BreakFilterChainCode {
-			log.Debugf("%s: break pre filter chain by filter %s",
-				requestTag,
-				filterName)
+			log.Debugf("%s: break pre filter chain by filter %s", requestTag, filterName)
 			return filterName, statusCode, err
 		}
 	}
@@ -41,9 +39,7 @@ func (f *Proxy) doPostFilters(requestTag string, c filter.Context, filters ...fi
 		}
 
 		if statusCode == filter.BreakFilterChainCode {
-			log.Debugf("%s: break post filter chain by filter %s",
-				requestTag,
-				filterName)
+			log.Debugf("%s: break post filter chain by filter %s", requestTag, filterName)
 			return filterName, statusCode, err
 		}
 	}

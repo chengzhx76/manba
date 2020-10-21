@@ -86,8 +86,7 @@ func (r *dispatcher) loadRoutings() {
 		return r.addRouting(value.(*metapb.Routing))
 	})
 	if nil != err {
-		log.Errorf("load servers failed, errors:\n%+v",
-			err)
+		log.Errorf("load servers failed, errors:%+v", err)
 		return
 	}
 }
@@ -98,8 +97,7 @@ func (r *dispatcher) loadBinds() {
 	for clusterID := range r.clusters {
 		servers, err := r.store.GetBindServers(clusterID)
 		if nil != err {
-			log.Errorf("load binds from store failed, errors:\n%+v",
-				err)
+			log.Errorf("load binds from store failed, errors:%+v", err)
 			return
 		}
 
@@ -110,9 +108,7 @@ func (r *dispatcher) loadBinds() {
 			}
 			err = r.addBind(b)
 			if nil != err {
-				log.Fatalf("bind <%s> add failed, errors:\n%+v",
-					b.String(),
-					err)
+				log.Fatalf("bind <%s> add failed, errors:%+v", b.String(), err)
 			}
 		}
 	}
@@ -125,8 +121,7 @@ func (r *dispatcher) loadAPIs() {
 		return r.addAPI(value.(*metapb.API))
 	})
 	if nil != err {
-		log.Errorf("load apis failed, errors:\n%+v",
-			err)
+		log.Errorf("load apis failed, errors:%+v", err)
 		return
 	}
 }
@@ -138,8 +133,7 @@ func (r *dispatcher) loadPlugins() {
 		return r.addPlugin(value.(*metapb.Plugin))
 	})
 	if nil != err {
-		log.Errorf("load plugins failed, errors:\n%+v",
-			err)
+		log.Errorf("load plugins failed, errors:%+v", err)
 		return
 	}
 }
@@ -149,15 +143,13 @@ func (r *dispatcher) loadAppliedPlugins() {
 
 	applied, err := r.store.GetAppliedPlugins()
 	if nil != err {
-		log.Errorf("load applied plugins failed, errors:\n%+v",
-			err)
+		log.Errorf("load applied plugins failed, errors:%+v", err)
 		return
 	}
 
 	err = r.updateAppliedPlugin(applied)
 	if nil != err {
-		log.Errorf("updated applied plugins failed, errors:\n%+v",
-			err)
+		log.Errorf("updated applied plugins failed, errors:%+v", err)
 		return
 	}
 }
@@ -170,9 +162,7 @@ func (r *dispatcher) addRouting(meta *metapb.Routing) error {
 	newValues := r.copyRoutings(0)
 	newValues[meta.ID] = newRoutingRuntime(meta)
 	r.routings = newValues
-	log.Infof("routing <%d> added, data <%s>",
-		meta.ID,
-		meta.String())
+	log.Infof("routing <%d> added, data <%s>", meta.ID, meta.String())
 
 	return nil
 }
@@ -188,9 +178,7 @@ func (r *dispatcher) updateRouting(meta *metapb.Routing) error {
 	rt.updateMeta(meta)
 	r.routings = newValues
 
-	log.Infof("routing <%d> updated, data <%s>",
-		meta.ID,
-		meta.String())
+	log.Infof("routing <%d> updated, data <%s>", meta.ID, meta.String())
 	return nil
 }
 
@@ -202,8 +190,7 @@ func (r *dispatcher) removeRouting(id uint64) error {
 	newValues := r.copyRoutings(id)
 	r.routings = newValues
 
-	log.Infof("routing <%d> deleted",
-		id)
+	log.Infof("routing <%d> deleted", id)
 	return nil
 }
 
@@ -358,9 +345,7 @@ func (r *dispatcher) updateServer(meta *metapb.Server) error {
 	r.addToCheck(rt)
 
 	r.servers = newValues
-	log.Infof("server <%d> updated, data <%s>",
-		meta.ID,
-		meta.String())
+	log.Infof("server <%d> updated, data <%s>", meta.ID, meta.String())
 
 	return nil
 }
@@ -402,9 +387,7 @@ func (r *dispatcher) addCluster(cluster *metapb.Cluster) error {
 	newValues[cluster.ID] = newClusterRuntime(cluster)
 
 	r.clusters = newValues
-	log.Infof("cluster <%d> added, data <%s>",
-		cluster.ID,
-		cluster.String())
+	log.Infof("cluster <%d> added, data <%s>", cluster.ID, cluster.String())
 
 	return nil
 }
