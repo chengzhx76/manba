@@ -255,9 +255,7 @@ func (r *dispatcher) addAPI(api *metapb.API) error {
 
 	r.apis = newValues
 	r.route = newRoute
-	log.Infof("api <%d> added, data <%s>",
-		api.ID,
-		api.String())
+	log.Infof("api <%d> added, data <%s>", api.ID, api.String())
 
 	return nil
 }
@@ -284,9 +282,7 @@ func (r *dispatcher) updateAPI(api *metapb.API) error {
 
 	r.apis = newValues
 	r.route = newRoute
-	log.Infof("api <%d> updated, data <%s>",
-		api.ID,
-		api.String())
+	log.Infof("api <%d> updated, data <%s>", api.ID, api.String())
 
 	return nil
 }
@@ -385,8 +381,7 @@ func (r *dispatcher) removeServer(id uint64) error {
 
 	r.servers = newValues
 	r.binds = newBinds
-	log.Infof("server <%d> removed",
-		rt.meta.ID)
+	log.Infof("server <%d> removed", rt.meta.ID)
 	return nil
 }
 
@@ -425,9 +420,7 @@ func (r *dispatcher) updateCluster(meta *metapb.Cluster) error {
 	rt.updateMeta(meta)
 
 	r.clusters = newValues
-	log.Infof("cluster <%d> updated, data <%s>",
-		meta.ID,
-		meta.String())
+	log.Infof("cluster <%d> updated, data <%s>", meta.ID, meta.String())
 
 	return nil
 }
@@ -445,22 +438,19 @@ func (r *dispatcher) removeCluster(id uint64) error {
 	r.binds = newBinds
 	r.clusters = newValues
 
-	log.Infof("cluster <%d> removed",
-		id)
+	log.Infof("cluster <%d> removed", id)
 	return nil
 }
 
 func (r *dispatcher) addBind(bind *metapb.Bind) error {
 	server, ok := r.servers[bind.ServerID]
 	if !ok {
-		log.Warnf("bind failed, server <%d> not found",
-			bind.ServerID)
+		log.Warnf("bind failed, server <%d> not found", bind.ServerID)
 		return errServerNotFound
 	}
 
 	if _, ok := r.clusters[bind.ClusterID]; !ok {
-		log.Warnf("add bind failed, cluster <%d> not found",
-			bind.ClusterID)
+		log.Warnf("add bind failed, cluster <%d> not found", bind.ClusterID)
 		return errClusterNotFound
 	}
 
@@ -492,14 +482,12 @@ func (r *dispatcher) addBind(bind *metapb.Bind) error {
 
 func (r *dispatcher) removeBind(bind *metapb.Bind) error {
 	if _, ok := r.servers[bind.ServerID]; !ok {
-		log.Errorf("remove bind failed: server <%d> not found",
-			bind.ServerID)
+		log.Errorf("remove bind failed: server <%d> not found", bind.ServerID)
 		return errServerNotFound
 	}
 
 	if _, ok := r.clusters[bind.ClusterID]; !ok {
-		log.Errorf("remove bind failed: cluster <%d> not found",
-			bind.ClusterID)
+		log.Errorf("remove bind failed: cluster <%d> not found", bind.ClusterID)
 		return errClusterNotFound
 	}
 
@@ -529,10 +517,7 @@ func (r *dispatcher) addPlugin(value *metapb.Plugin) error {
 
 	r.plugins[value.ID] = value
 
-	log.Infof("plugin <%d/%s:%d> added",
-		value.ID,
-		value.Name,
-		value.Version)
+	log.Infof("plugin <%d/%s:%d> added", value.ID, value.Name, value.Version)
 
 	return nil
 }
@@ -549,10 +534,7 @@ func (r *dispatcher) updatePlugin(value *metapb.Plugin) error {
 	}
 
 	r.plugins[value.ID] = value
-	log.Infof("plugin <%d/%s:%d> updated",
-		value.ID,
-		value.Name,
-		value.Version)
+	log.Infof("plugin <%d/%s:%d> updated", value.ID, value.Name, value.Version)
 
 	return nil
 }
@@ -564,17 +546,11 @@ func (r *dispatcher) removePlugin(id uint64) error {
 	}
 
 	if r.inAppliedPlugins(id) {
-		log.Fatalf("bug: plugin <%d/%s:%d> is applied, can not remove",
-			value.ID,
-			value.Name,
-			value.Version)
+		log.Fatalf("bug: plugin <%d/%s:%d> is applied, can not remove", value.ID, value.Name, value.Version)
 	}
 
 	delete(r.plugins, id)
-	log.Infof("plugin <%d/%s:%d> removed",
-		value.ID,
-		value.Name,
-		value.Version)
+	log.Infof("plugin <%d/%s:%d> removed", value.ID, value.Name, value.Version)
 	return nil
 }
 
@@ -595,8 +571,7 @@ func (r *dispatcher) updateAppliedPlugin(value *metapb.AppliedPlugins) error {
 		return err
 	}
 
-	log.Infof("plugins applied with %+v",
-		value.AppliedIDs)
+	log.Infof("plugins applied with %+v", value.AppliedIDs)
 	return nil
 }
 

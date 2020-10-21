@@ -10,6 +10,7 @@ import (
 func TestLog(t *testing.T) {
 	Info("测试========>")
 	SetFlags(Lshortfile | Ldate | Ltime)
+	DebugEnabled()
 	Info("测试========>")
 }
 

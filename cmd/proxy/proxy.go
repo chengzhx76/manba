@@ -101,6 +101,7 @@ func main() {
 	}
 
 	log.InitLog()
+	log.SetFlags(log.Lshortfile | log.Ldate | log.Ltime | log.Lmicroseconds)
 
 	if *limitCpus == 0 {
 		runtime.GOMAXPROCS(runtime.NumCPU())

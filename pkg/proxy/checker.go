@@ -111,11 +111,7 @@ func (r *dispatcher) doCheck(svr *serverRuntime) bool {
 	resp, err := r.httpClient.Do(req, svr.meta.Addr, opt)
 	defer fasthttp.ReleaseResponse(resp)
 	if err != nil {
-		log.Warnf("server <%d, %s, %d> check failed, errors:\n%+v",
-			svr.meta.ID,
-			svr.getCheckURL(),
-			svr.checkFailCount+1,
-			err)
+		log.Warnf("server <%d, %s, %d> check failed, errors:%+v", svr.meta.ID, svr.getCheckURL(), svr.checkFailCount+1, err)
 		svr.fail()
 		return false
 	}
