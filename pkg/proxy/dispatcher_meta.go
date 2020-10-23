@@ -34,6 +34,7 @@ func (r *dispatcher) load() {
 
 	r.loadProxies()
 	r.loadClusters()
+	// 获取已添加的服务器资源
 	r.loadServers()
 	r.loadBinds()
 	r.loadAPIs()
@@ -49,7 +50,7 @@ func (r *dispatcher) loadProxies() {
 		return r.addProxy(value)
 	})
 	if nil != err {
-		log.Errorf("load proxies failed, errors:\n%+v", err)
+		log.Errorf("load proxies failed, errors:%+v", err)
 		return
 	}
 }
@@ -61,7 +62,7 @@ func (r *dispatcher) loadClusters() {
 		return r.addCluster(value.(*metapb.Cluster))
 	})
 	if nil != err {
-		log.Errorf("load clusters failed, errors:\n%+v",
+		log.Errorf("load clusters failed, errors:%+v",
 			err)
 		return
 	}
@@ -74,7 +75,7 @@ func (r *dispatcher) loadServers() {
 		return r.addServer(value.(*metapb.Server))
 	})
 	if nil != err {
-		log.Errorf("load servers failed, errors:\n%+v", err)
+		log.Errorf("load servers failed, errors:%+v", err)
 		return
 	}
 }

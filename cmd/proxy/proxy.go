@@ -39,13 +39,13 @@ var (
 	addrStore                     = flag.String("addr-store", "etcd://127.0.0.1:2379", "Addr: store of meta data, support etcd")
 	addrStoreUser                 = flag.String("addr-store-user", "", "addr Store UserName")
 	addrStorePwd                  = flag.String("addr-store-pwd", "", "addr Store Password")
-	addrPPROF                     = flag.String("addr-pprof", "", "Addr: pprof addr")
+	addrPPROF                     = flag.String("addr-pprof", "", "Addr: pprof addr") // go 性能检测地址
 	namespace                     = flag.String("namespace", "dev", "The namespace to isolation the environment.")
 	limitCpus                     = flag.Int("limit-cpus", 0, "Limit: schedule threads count")
 	limitCountDispatchWorker      = flag.Int("limit-dispatch", 64, "Limit: Count of dispatch worker")
 	limitCountCopyWorker          = flag.Int("limit-copy", 4, "Limit: Count of copy worker")
-	limitCountHeathCheckWorker    = flag.Int("limit-heathcheck", 1, "Limit: Count of heath check worker")
-	limitIntervalHeathCheckSec    = flag.Int("limit-heathcheck-interval", 60, "Limit(sec): Interval for heath check")
+	limitCountHeathCheckWorker    = flag.Int("limit-heathcheck", 1, "Limit: Count of heath check worker")             // 心跳检查线程数
+	limitIntervalHeathCheckSec    = flag.Int("limit-heathcheck-interval", 60, "Limit(sec): Interval for heath check") // 心跳检查间隔
 	limitCountConn                = flag.Int("limit-conn", 64, "Limit(count): Count of connection per backend server")
 	limitDurationConnKeepaliveSec = flag.Int("limit-conn-keepalive", 60, "Limit(sec): Keepalive for backend server connections")
 	limitDurationConnIdleSec      = flag.Int("limit-conn-idle", 30, "Limit(sec): Idle for backend server connections")
@@ -109,10 +109,11 @@ func main() {
 		runtime.GOMAXPROCS(*limitCpus)
 	}
 
+	// go 性能分析
 	if *addrPPROF != "" {
 		go func() {
 			err := http.ListenAndServe(*addrPPROF, nil)
-			log.Errorf("start pprof failed, errors:\n%+v", err)
+			log.Errorf("start pprof failed, errors:%+v", err)
 		}()
 	}
 
@@ -184,7 +185,7 @@ func getCfg() *proxy.Cfg {
 	for _, spec := range *specs {
 		filter, err := proxy.ParseFilter(spec)
 		if err != nil {
-			log.Fatalf("boostrap: parse filter failed: errors:\n%+v", err)
+			log.Fatalf("boostrap: parse filter failed: errors:%+v", err)
 		}
 
 		cfg.AddFilter(filter)

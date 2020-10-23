@@ -17,10 +17,7 @@ func MustMarshal(value interface{}) []byte {
 	if err != nil {
 		buf := make([]byte, 4096)
 		runtime.Stack(buf, true)
-		log.Fatalf("json marshal failed, value=<%v> errors:\n %+v \n %s",
-			value,
-			err,
-			buf)
+		log.Fatalf("json marshal failed, value=<%v> errors: %+v  %s", value, err, buf)
 	}
 	return v
 }
@@ -31,7 +28,7 @@ func MustUnmarshal(value interface{}, data []byte) {
 	if err != nil {
 		buf := make([]byte, 4096)
 		runtime.Stack(buf, true)
-		log.Fatalf("json unmarshal failed, data=<%v> errors:\n %+v \n %s",
+		log.Fatalf("json unmarshal failed, data=<%v> errors: %+v  %s",
 			data,
 			err,
 			buf)

@@ -31,10 +31,7 @@ func MustUnmarshal(pb PB, data []byte) {
 	if err != nil {
 		buf := make([]byte, 4096)
 		runtime.Stack(buf, true)
-		log.Fatalf("pb unmarshal failed, data=<%v> errors:\n %+v \n %s",
-			data,
-			err,
-			buf)
+		log.Fatalf("pb unmarshal failed, data=<%v> errors: %+v  %s", data, err, buf)
 	}
 }
 
@@ -44,10 +41,7 @@ func MustMarshal(pb PB) []byte {
 	if err != nil {
 		buf := make([]byte, 4096)
 		runtime.Stack(buf, true)
-		log.Fatalf("pb marshal failed, pb=<%+v> errors:\n %+v \n %s",
-			pb,
-			err,
-			buf)
+		log.Fatalf("pb marshal failed, pb=<%+v> errors: %+v  %s", pb, err, buf)
 	}
 
 	return data
@@ -59,10 +53,7 @@ func MustMarshalTo(pb PB, data []byte) int {
 	if err != nil {
 		buf := make([]byte, 4096)
 		runtime.Stack(buf, true)
-		log.Fatalf("pb marshal failed, pb=<%v> errors:\n %+v \n %s",
-			pb,
-			err,
-			buf)
+		log.Fatalf("pb marshal failed, pb=<%v> errors: %+v  %s", pb, err, buf)
 	}
 
 	return n

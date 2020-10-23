@@ -52,14 +52,17 @@ func (r *dispatcher) check(id uint64) {
 
 	defer func() {
 		if svr.meta.HeathCheck != nil {
+			// 健康检查间隔 服务平台配置的大于本地配置的用本地的配置
 			if svr.useCheckDuration > r.cnf.Option.LimitIntervalHeathCheck {
 				svr.useCheckDuration = r.cnf.Option.LimitIntervalHeathCheck
 			}
 
+			// 健康检查间隔如果是 0，则用服务端配置的
 			if svr.useCheckDuration == 0 {
 				svr.useCheckDuration = time.Duration(svr.meta.HeathCheck.CheckInterval)
 			}
 
+			// 间隔时间内调用 r.heathCheckTimeout 方法
 			svr.heathTimeout, _ = r.tw.Schedule(svr.useCheckDuration, r.heathCheckTimeout, id)
 		}
 	}()

@@ -253,6 +253,8 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 		multiCtx.init()
 	}
 
+	// dispatchNode 是将请求复制后分发给不同的 api 服务
+	// 客户端的一个请求，可以被发送到多个后端，网关聚合请求结果一次性返回给客户端。
 	for idx, dn := range dispatches {
 		// wait last batch complete
 		if wg != nil && lastBatch < dn.node.meta.BatchIndex {
@@ -293,6 +295,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 		if wg != nil {
 			p.dispatches[getIndex(&p.dispatchIndex, p.cfg.Option.LimitCountDispatchWorker)] <- dn
 		} else {
+			// 开始代理
 			p.doProxy(dn, nil)
 		}
 	}

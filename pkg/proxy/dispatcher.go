@@ -226,6 +226,7 @@ func newDispatcher(cnf *Cfg, db store.Store, runner *task.Runner, jsEngineFunc f
 		watchEventC:  make(chan *store.Evt),
 	}
 
+	// 开始心跳检查
 	rt.readyToHeathChecker()
 	return rt
 }
