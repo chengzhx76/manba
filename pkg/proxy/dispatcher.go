@@ -193,7 +193,7 @@ type dispatcher struct {
 	plugins        map[uint64]*metapb.Plugin
 	appliedPlugins *metapb.AppliedPlugins
 	jsEngineFunc   func(*plugin.Engine)
-	checkerC       chan uint64
+	checkerC       chan uint64 // 服务 ID channel
 	watchStopC     chan bool
 	watchEventC    chan *store.Evt
 	analysiser     *util.Analysis

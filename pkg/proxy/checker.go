@@ -29,7 +29,7 @@ func (r *dispatcher) readyToHeathChecker() {
 }
 
 func (r *dispatcher) addToCheck(svr *serverRuntime) {
-	svr.circuit = metapb.Open
+	svr.circuit = metapb.Open // 默认正常状态
 	if svr.meta.HeathCheck != nil {
 		svr.useCheckDuration = time.Duration(svr.meta.HeathCheck.CheckInterval)
 	}
@@ -83,6 +83,7 @@ func (r *dispatcher) check(id uint64) {
 		return
 	}
 
+	// 检查状态
 	if r.doCheck(svr) {
 		status = metapb.Up
 	} else {
@@ -125,8 +126,7 @@ func (r *dispatcher) doCheck(svr *serverRuntime) bool {
 		return false
 	}
 
-	if svr.meta.HeathCheck.Body != "" &&
-		svr.meta.HeathCheck.Body != string(resp.Body()) {
+	if svr.meta.HeathCheck.Body != "" && svr.meta.HeathCheck.Body != string(resp.Body()) {
 		log.Warnf("server <%s, %s, %d> check failed, body <%s>, expect <%s>", svr.meta.Addr, svr.getCheckURL(), svr.checkFailCount+1, resp.Body(), svr.meta.HeathCheck.Body)
 		svr.fail()
 		return false

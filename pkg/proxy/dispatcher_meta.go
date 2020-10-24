@@ -30,9 +30,9 @@ var (
 )
 
 func (r *dispatcher) load() {
-	go r.watch()
+	go r.watch() // 监听
 
-	r.loadProxies()
+	r.loadProxies() // 获取代理信息
 	r.loadClusters()
 	// 获取已添加的服务器资源
 	r.loadServers()

@@ -71,7 +71,7 @@ type abstractSupportProtectedRuntime struct {
 	tw        *goetty.TimeoutWheel
 	activeQPS int64
 	limiter   *rateLimiter
-	circuit   metapb.CircuitStatus
+	circuit   metapb.CircuitStatus // 熔断状态
 	cb        *metapb.CircuitBreaker
 	barrier   *util.RateBarrier
 }
@@ -125,8 +125,8 @@ type serverRuntime struct {
 
 	meta             *metapb.Server
 	heathTimeout     goetty.Timeout
-	checkFailCount   int
-	useCheckDuration time.Duration
+	checkFailCount   int           // 检查失败次数
+	useCheckDuration time.Duration // 检查时间间隔
 }
 
 func newServerRuntime(meta *metapb.Server, tw *goetty.TimeoutWheel, activeQPS int64) *serverRuntime {
@@ -170,6 +170,7 @@ func (s *serverRuntime) fail() {
 	s.useCheckDuration += s.useCheckDuration / 2
 }
 
+// 失败次数和
 func (s *serverRuntime) reset() {
 	s.checkFailCount = 0
 	s.useCheckDuration = time.Duration(s.meta.HeathCheck.CheckInterval)
