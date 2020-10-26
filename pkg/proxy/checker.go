@@ -11,6 +11,7 @@ import (
 	"manba/pkg/util"
 )
 
+// 开始心跳检查
 func (r *dispatcher) readyToHeathChecker() {
 	for i := 0; i < r.cnf.Option.LimitCountHeathCheckWorker; i++ {
 		r.runner.RunCancelableTask(func(ctx context.Context) {

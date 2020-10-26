@@ -113,17 +113,13 @@ func (rd *render) renderMulti(ctx *fasthttp.RequestCtx) {
 		}
 
 		ctx.SetStatusCode(code)
-		log.Errorf("%s: return with %d, errors: %v",
-			rd.requestTag,
-			code,
-			err)
+		log.Errorf("%s: return with %d, errors: %v", rd.requestTag, code, err)
 		return
 	}
 
 	if !hasTemplate {
 		ctx.Write(rd.multiContext)
-		log.Infof("%s: return with aggregation",
-			rd.requestTag)
+		log.Infof("%s: return with aggregation", rd.requestTag)
 		return
 	}
 
@@ -160,24 +156,20 @@ func (rd *render) renderDefault(ctx *fasthttp.RequestCtx) {
 	}
 	ctx.Write(rd.api.meta.DefaultValue.Body)
 
-	log.Infof("%s: return with default value",
-		rd.requestTag)
+	log.Infof("%s: return with default value", rd.requestTag)
 }
 
 func (rd *render) renderTemplate(ctx *fasthttp.RequestCtx, context []byte) {
 	data, err := rd.extract(context)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		log.Errorf("%s: return with 500, errors: %v",
-			rd.requestTag,
-			err)
+		log.Errorf("%s: return with 500, errors: %v", rd.requestTag, err)
 		return
 	}
 
 	ctx.Write(data)
 
-	log.Infof("%s: return with template",
-		rd.requestTag)
+	log.Infof("%s: return with template", rd.requestTag)
 }
 
 func (rd *render) extract(src []byte) ([]byte, error) {

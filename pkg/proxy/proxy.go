@@ -108,8 +108,8 @@ func (p *Proxy) init() {
 	p.initFilters()
 
 	err = p.dispatcher.store.RegistryProxy(&metapb.Proxy{
-		Addr:    p.cfg.Addr,
-		AddrRPC: p.cfg.AddrRPC,
+		Addr:    p.cfg.Addr,    // 访问地址
+		AddrRPC: p.cfg.AddrRPC, // 管理地址
 	}, p.cfg.TTLProxy)
 	if err != nil {
 		log.Fatalf("init route table failed, errors:%+v", err)
@@ -135,10 +135,10 @@ func (p *Proxy) initFilters() {
 		if nil != err {
 			log.Fatalf("create filter failed, filter=<%+v> errors:%+v", filter, err)
 		}
-
+		// 执行过滤器，把扩展的配置文件传进去
 		err = f.Init(filter.ExternalCfg)
 		if nil != err {
-			log.Fatalf("init filter failed, filter=<%+v> errors:\n%+v", filter, err)
+			log.Fatalf("init filter failed, filter=<%+v> errors:%+v", filter, err)
 		}
 
 		p.filters = append(p.filters, f)
@@ -179,7 +179,7 @@ func (p *Proxy) readyToDispatch() {
 			}
 		})
 		if err != nil {
-			log.Fatalf("init dispatch workers failed, errors:\n%+v", err)
+			log.Fatalf("init dispatch workers failed, errors:%+v", err)
 		}
 	}
 }

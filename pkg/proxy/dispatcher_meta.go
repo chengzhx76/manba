@@ -10,6 +10,8 @@ import (
 	"manba/pkg/util"
 )
 
+// 分发的元数据
+
 var (
 	errServerExists    = errors.New("Server already exist")
 	errClusterExists   = errors.New("Cluster already exist")
@@ -40,6 +42,7 @@ func (r *dispatcher) load() {
 	r.loadAPIs()
 	r.loadRoutings()
 	r.loadPlugins()
+	// 加载应用的插件
 	r.loadAppliedPlugins()
 }
 
@@ -62,15 +65,14 @@ func (r *dispatcher) loadClusters() {
 		return r.addCluster(value.(*metapb.Cluster))
 	})
 	if nil != err {
-		log.Errorf("load clusters failed, errors:%+v",
-			err)
+		log.Errorf("load clusters failed, errors:%+v", err)
 		return
 	}
 }
 
 func (r *dispatcher) loadServers() {
 	log.Infof("load servers")
-
+	// 加载服务器资源
 	err := r.store.GetServers(limit, func(value interface{}) error {
 		return r.addServer(value.(*metapb.Server))
 	})
@@ -139,6 +141,7 @@ func (r *dispatcher) loadPlugins() {
 	}
 }
 
+// 加载应用的插件
 func (r *dispatcher) loadAppliedPlugins() {
 	log.Infof("load applied plugins")
 
@@ -312,6 +315,8 @@ func (r *dispatcher) refreshQPS(value int64) int64 {
 	return activeQPS
 }
 
+// 1.在启动的时候添加 server
+// 2.在通过 web界面添加的时候添加server
 func (r *dispatcher) addServer(svr *metapb.Server) error {
 	if _, ok := r.servers[svr.ID]; ok {
 		return errServerExists

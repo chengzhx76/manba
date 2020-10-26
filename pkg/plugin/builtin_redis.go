@@ -18,9 +18,7 @@ func (m *RedisModule) CreateRedis(cfg map[string]interface{}) *RedisOp {
 		MaxIdle:     int(cfg["maxIdle"].(int64)),
 		IdleTimeout: time.Second * time.Duration(int(cfg["idleTimeout"].(int64))),
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp",
-				cfg["addr"].(string),
-				redis.DialWriteTimeout(time.Second*10))
+			return redis.Dial("tcp", cfg["addr"].(string), redis.DialWriteTimeout(time.Second*10))
 		},
 	}
 

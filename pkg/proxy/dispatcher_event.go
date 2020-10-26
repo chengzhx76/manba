@@ -9,6 +9,8 @@ import (
 	"manba/util/format"
 )
 
+// 监听数据变动的所有方法
+
 var (
 	eventTypeStatusChanged = store.EvtType(math.MaxInt32)
 	eventSrcStatusChanged  = store.EvtSrc(math.MaxInt32)
@@ -27,6 +29,7 @@ func (r *dispatcher) watch() {
 	log.Errorf("router watch failed, errors:%+v", err)
 }
 
+// 监听添加事件（web界面、grpc）
 func (r *dispatcher) readyToReceiveWatchEvent() {
 	for {
 		evt := <-r.watchEventC
@@ -77,6 +80,7 @@ func (r *dispatcher) doProxyEvent(evt *store.Evt) {
 	}
 }
 
+// api 变更
 func (r *dispatcher) doAPIEvent(evt *store.Evt) {
 	api, _ := evt.Value.(*metapb.API)
 
@@ -89,6 +93,7 @@ func (r *dispatcher) doAPIEvent(evt *store.Evt) {
 	}
 }
 
+// 集群 变更
 func (r *dispatcher) doClusterEvent(evt *store.Evt) {
 	cluster, _ := evt.Value.(*metapb.Cluster)
 
