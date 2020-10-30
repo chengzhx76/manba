@@ -205,7 +205,7 @@ type dispatcher struct {
 
 func newDispatcher(cnf *Cfg, db store.Store, runner *task.Runner, jsEngineFunc func(*plugin.Engine)) *dispatcher {
 	tw := goetty.NewTimeoutWheel(goetty.WithTickInterval(time.Second))
-	rt := &dispatcher{
+	disp := &dispatcher{
 		cnf:          cnf,
 		tw:           tw,
 		store:        db,
@@ -227,8 +227,8 @@ func newDispatcher(cnf *Cfg, db store.Store, runner *task.Runner, jsEngineFunc f
 	}
 
 	// 开始心跳检查
-	rt.readyToHeathChecker()
-	return rt
+	disp.readyToHeathChecker()
+	return disp
 }
 
 func (r *dispatcher) dispatch(reqCtx *fasthttp.RequestCtx, requestTag string) (*apiRuntime, []*dispatchNode, *expr.Ctx) {

@@ -67,13 +67,17 @@ func (p *Proxy) isStopped() bool {
 	return atomic.LoadInt32(&p.stopped) == 1
 }
 
+// 开始监控指标 推送
 func (p *Proxy) startMetrics() {
 	util.StartMetricsPush(p.runner, p.cfg.Metric)
 }
 
 func (p *Proxy) startReadyTasks() {
+	// 插件里的资源 GC
 	p.readyToGCJSEngine()
+	// 请求复制
 	p.readyToCopy()
+	// Dispatch 监听
 	p.readyToDispatch()
 }
 
@@ -89,17 +93,17 @@ func (p *Proxy) newHTTPServer() *fasthttp.Server {
 
 func (p *Proxy) startHTTP() {
 	log.Infof("start http at %s", p.cfg.Addr)
-	s := p.newHTTPServer()
-	err := s.ListenAndServe(p.cfg.Addr)
+	htp := p.newHTTPServer()
+	err := htp.ListenAndServe(p.cfg.Addr)
 	if err != nil {
 		log.Fatalf("start http listeners failed with %+v", err)
 	}
 }
 
-func (p *Proxy) startHTTPWithListener(l net.Listener) {
+func (p *Proxy) startHTTPWithListener(lis net.Listener) {
 	log.Infof("start http at %s", p.cfg.Addr)
-	s := p.newHTTPServer()
-	err := s.Serve(l)
+	htp := p.newHTTPServer()
+	err := htp.Serve(lis)
 	if err != nil {
 		log.Fatalf("start http listeners failed with %+v", err)
 	}
@@ -113,21 +117,21 @@ func (p *Proxy) startHTTPS() {
 	defaultCertData, defaultKeyData := p.mustParseDefaultTLSCert()
 
 	log.Infof("start https at %s", p.cfg.AddrHTTPS)
-	s := p.newHTTPServer()
-	p.appendCertsEmbed(s, defaultCertData, defaultKeyData)
-	err := s.ListenAndServeTLS(p.cfg.AddrHTTPS, "", "")
+	htsSever := p.newHTTPServer()
+	p.appendCertsEmbed(htsSever, defaultCertData, defaultKeyData)
+	err := htsSever.ListenAndServeTLS(p.cfg.AddrHTTPS, "", "")
 	if err != nil {
 		log.Fatalf("start http listeners failed with %+v", err)
 	}
 }
 
-func (p *Proxy) startHTTPSWithListener(l net.Listener) {
+func (p *Proxy) startHTTPSWithListener(lis net.Listener) {
 	defaultCertData, defaultKeyData := p.mustParseDefaultTLSCert()
 
 	log.Infof("start https at %s", p.cfg.AddrHTTPS)
-	s := p.newHTTPServer()
-	p.appendCertsEmbed(s, defaultCertData, defaultKeyData)
-	err := s.ServeTLS(l, "", "")
+	htp := p.newHTTPServer()
+	p.appendCertsEmbed(htp, defaultCertData, defaultKeyData)
+	err := htp.ServeTLS(lis, "", "")
 	if err != nil {
 		log.Fatalf("start http listeners failed with %+v", err)
 	}
@@ -159,15 +163,15 @@ func (p *Proxy) startHTTPSWebSocketWithListener(l net.Listener) {
 }
 
 func (p *Proxy) startHTTPCMUX() {
-	l, err := net.Listen("tcp", p.cfg.Addr)
+	lis, err := net.Listen("tcp", p.cfg.Addr)
 	if err != nil {
 		log.Fatalf("start http failed failed with %+v", err)
 	}
 
-	m := cmux.New(l)
-	go p.startHTTPWithListener(m.Match(cmux.Any()))
-	go p.startHTTPWebSocketWithListener(m.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
-	err = m.Serve()
+	cm := cmux.New(lis)
+	go p.startHTTPWithListener(cm.Match(cmux.Any()))
+	go p.startHTTPWebSocketWithListener(cm.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
+	err = cm.Serve()
 	if err != nil {
 		log.Fatalf("start http failed failed with %+v", err)
 	}
@@ -178,15 +182,15 @@ func (p *Proxy) startHTTPSCMUX() {
 		return
 	}
 
-	l, err := net.Listen("tcp", p.cfg.AddrHTTPS)
+	lis, err := net.Listen("tcp", p.cfg.AddrHTTPS)
 	if err != nil {
 		log.Fatalf("start https failed failed with %+v", err)
 	}
 
-	m := cmux.New(l)
-	go p.startHTTPSWithListener(m.Match(cmux.Any()))
-	go p.startHTTPSWebSocketWithListener(m.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
-	err = m.Serve()
+	cm := cmux.New(lis)
+	go p.startHTTPSWithListener(cm.Match(cmux.Any()))
+	go p.startHTTPSWebSocketWithListener(cm.Match(cmux.HTTP1HeaderField("Upgrade", "websocket")))
+	err = cm.Serve()
 	if err != nil {
 		log.Fatalf("start https failed failed with %+v", err)
 	}

@@ -25,6 +25,8 @@ var (
 	defaultTimeout = time.Second * 15
 )
 
+// 监控指标推送
+
 // MetricCfg is the metric configuration.
 type MetricCfg struct {
 	Job          string
@@ -67,7 +69,7 @@ func StartMetricsPush(runner *task.Runner, cfg *MetricCfg) {
 			case <-t.C:
 				err := doPush(cfg.Job, instanceGroupingKey(cfg.Instance), cfg.Address, prometheus.DefaultGatherer, "PUT")
 				if err != nil {
-					log.Errorf("metric: could not push metrics to prometheus pushgateway: errors:\n%+v", err)
+					log.Errorf("metric: could not push metrics to prometheus pushgateway: errors:%+v", err)
 				}
 			}
 		}

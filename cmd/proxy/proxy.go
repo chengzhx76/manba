@@ -42,7 +42,7 @@ var (
 	addrPPROF                     = flag.String("addr-pprof", "", "Addr: pprof addr") // go 性能检测地址
 	namespace                     = flag.String("namespace", "dev", "The namespace to isolation the environment.")
 	limitCpus                     = flag.Int("limit-cpus", 0, "Limit: schedule threads count")
-	limitCountDispatchWorker      = flag.Int("limit-dispatch", 64, "Limit: Count of dispatch worker")
+	limitCountDispatchWorker      = flag.Int("limit-dispatch", 64, "Limit: Count of dispatch worker") // 分发线程数
 	limitCountCopyWorker          = flag.Int("limit-copy", 4, "Limit: Count of copy worker")
 	limitCountHeathCheckWorker    = flag.Int("limit-heathcheck", 1, "Limit: Count of heath check worker")             // 心跳检查线程数
 	limitIntervalHeathCheckSec    = flag.Int("limit-heathcheck-interval", 60, "Limit(sec): Interval for heath check") // 心跳检查间隔
@@ -66,7 +66,7 @@ var (
 	// metric
 	metricJob          = flag.String("metric-job", "", "prometheus job name")
 	metricInstance     = flag.String("metric-instance", "", "prometheus instance name")
-	metricAddress      = flag.String("metric-address", "", "prometheus proxy address")
+	metricAddress      = flag.String("metric-address", "", "prometheus proxy address") // 推送的地址
 	metricIntervalSync = flag.Uint64("interval-metric-sync", 0, "Interval(sec): metric sync")
 
 	// enable features

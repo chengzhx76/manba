@@ -31,19 +31,19 @@ var (
 	limit = int64(32)
 )
 
-func (r *dispatcher) load() {
-	go r.watch() // 监听
+func (disp *dispatcher) load() {
+	go disp.watch() // 监听
 
-	r.loadProxies() // 获取代理信息
-	r.loadClusters()
+	disp.loadProxies() // 获取代理信息
+	disp.loadClusters()
 	// 获取已添加的服务器资源
-	r.loadServers()
-	r.loadBinds()
-	r.loadAPIs()
-	r.loadRoutings()
-	r.loadPlugins()
+	disp.loadServers()
+	disp.loadBinds()
+	disp.loadAPIs()
+	disp.loadRoutings()
+	disp.loadPlugins()
 	// 加载应用的插件
-	r.loadAppliedPlugins()
+	disp.loadAppliedPlugins()
 }
 
 func (r *dispatcher) loadProxies() {

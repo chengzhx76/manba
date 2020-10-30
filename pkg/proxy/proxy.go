@@ -202,7 +202,7 @@ func (p *Proxy) readyToCopy() {
 			}
 		})
 		if err != nil {
-			log.Fatalf("init copy workers failed, errors:\n%+v", err)
+			log.Fatalf("init copy workers failed, errors:%+v", err)
 		}
 	}
 }
@@ -216,6 +216,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 	buf.Write(ctx.RequestURI())
 	requestTag := hack.SliceToString(buf.Bytes())
 
+	// 代理停止，返回 503 状态码
 	if p.isStopped() {
 		log.Infof("proxy is stopped")
 		ctx.SetStatusCode(fasthttp.StatusServiceUnavailable)
@@ -224,6 +225,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 
 	startAt := time.Now()
 	api, dispatches, exprCtx := p.dispatcher.dispatch(ctx, requestTag)
+	// 没有匹配到正确的方法 [method]api
 	if len(dispatches) == 0 &&
 		(nil == api || api.meta.DefaultValue == nil) {
 		ctx.SetStatusCode(fasthttp.StatusNotFound)
@@ -281,6 +283,7 @@ func (p *Proxy) ServeFastHTTP(ctx *fasthttp.RequestCtx) {
 		if dn.copyTo != nil {
 			log.Infof("%s: dispatch node %d copy to %s", requestTag, idx, dn.copyTo.meta.Addr)
 
+			// readyToCopy() 方法读取
 			p.copies[getIndex(&p.copyIndex, p.cfg.Option.LimitCountCopyWorker)] <- &copyReq{
 				origin:     copyRequest(&ctx.Request),
 				to:         dn.copyTo.clone(),
