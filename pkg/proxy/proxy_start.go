@@ -137,18 +137,18 @@ func (p *Proxy) startHTTPSWithListener(lis net.Listener) {
 	}
 }
 
-func (p *Proxy) startHTTPWebSocketWithListener(l net.Listener) {
+func (p *Proxy) startHTTPWebSocketWithListener(lis net.Listener) {
 	log.Infof("start http websocket at %s", p.cfg.Addr)
 	s := &http.Server{
 		Handler: p,
 	}
-	err := s.Serve(l)
+	err := s.Serve(lis)
 	if err != nil {
 		log.Fatalf("start http websocket failed with %+v", err)
 	}
 }
 
-func (p *Proxy) startHTTPSWebSocketWithListener(l net.Listener) {
+func (p *Proxy) startHTTPSWebSocketWithListener(lis net.Listener) {
 	defaultCertData, defaultKeyData := p.mustParseDefaultTLSCert()
 
 	log.Infof("start https websocket at %s", p.cfg.Addr)
@@ -156,7 +156,7 @@ func (p *Proxy) startHTTPSWebSocketWithListener(l net.Listener) {
 		Handler: p,
 	}
 	p.configTLSConfig(s, defaultCertData, defaultKeyData)
-	err := s.ServeTLS(l, "", "")
+	err := s.ServeTLS(lis, "", "")
 	if err != nil {
 		log.Fatalf("start https websocket failed with errors %+v", err)
 	}
