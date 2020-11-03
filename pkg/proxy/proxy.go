@@ -107,6 +107,7 @@ func (p *Proxy) init() {
 
 	p.initFilters()
 
+	// 注册已启动的 proxy
 	err = p.dispatcher.store.RegistryProxy(&metapb.Proxy{
 		Addr:    p.cfg.Addr,    // 访问地址
 		AddrRPC: p.cfg.AddrRPC, // 管理地址

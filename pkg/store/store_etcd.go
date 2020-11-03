@@ -471,7 +471,9 @@ func (e *EtcdStore) GetAPIs(limit int64, fn func(interface{}) error) error {
 	e.RLock()
 	defer e.RUnlock()
 
-	return e.getValues(e.apisDir, limit, func() pb { return &metapb.API{} }, fn)
+	return e.getValues(e.apisDir, limit, func() pb {
+		return &metapb.API{}
+	}, fn)
 }
 
 // GetAPI returns the api

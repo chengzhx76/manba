@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -199,6 +200,10 @@ func (r *dispatcher) removeRouting(id uint64) error {
 }
 
 func (r *dispatcher) addProxy(meta *metapb.Proxy) error {
+
+	d, _ := json.Marshal(meta)
+	log.Infof("===addProxy==========> [%s]", d)
+
 	key := util.GetAddrFormat(meta.Addr)
 
 	if _, ok := r.proxies[key]; ok {
@@ -292,6 +297,8 @@ func (r *dispatcher) removeAPI(id uint64) error {
 }
 
 func (r *dispatcher) refreshAllQPS() {
+	log.Infof("===addProxy==========> [%s]")
+
 	for _, svr := range r.servers {
 		svr.activeQPS = r.refreshQPS(svr.meta.MaxQPS)
 		svr.updateMeta(svr.meta)
@@ -487,6 +494,7 @@ func (r *dispatcher) removeBind(bind *metapb.Bind) error {
 }
 
 func (r *dispatcher) getServerStatus(id uint64) metapb.Status {
+
 	binds := r.binds
 	for _, bindInfos := range binds {
 		for _, info := range bindInfos.servers {

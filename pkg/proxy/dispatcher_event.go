@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"encoding/json"
 	"math"
 
 	"manba/log"
@@ -34,6 +35,9 @@ func (r *dispatcher) readyToReceiveWatchEvent() {
 	for {
 		evt := <-r.watchEventC
 
+		d, _ := json.Marshal(evt)
+		log.Infof("===readyToReceiveWatchEvent==========> [%s]", d)
+
 		if evt.Src == store.EventSrcCluster {
 			r.doClusterEvent(evt)
 		} else if evt.Src == store.EventSrcServer {
@@ -50,7 +54,7 @@ func (r *dispatcher) readyToReceiveWatchEvent() {
 			r.doPluginEvent(evt)
 		} else if evt.Src == store.EventSrcApplyPlugin {
 			r.doApplyPluginEvent(evt)
-		} else if evt.Src == eventSrcStatusChanged {
+		} else if evt.Src == eventSrcStatusChanged { // server 状态改变事件
 			r.doStatusChangedEvent(evt)
 		} else {
 			log.Warnf("unknown event <%+v>", evt)
@@ -71,6 +75,10 @@ func (r *dispatcher) doRoutingEvent(evt *store.Evt) {
 }
 
 func (r *dispatcher) doProxyEvent(evt *store.Evt) {
+
+	d, _ := json.Marshal(evt)
+	log.Infof("===doProxyEvent==========> [%s]", d)
+
 	proxy, _ := evt.Value.(*metapb.Proxy)
 
 	if evt.Type == store.EventTypeNew {
@@ -153,8 +161,11 @@ func (r *dispatcher) doApplyPluginEvent(evt *store.Evt) {
 }
 
 func (r *dispatcher) doStatusChangedEvent(evt *store.Evt) {
+
 	value := evt.Value.(statusChanged)
 	oldStatus := r.getServerStatus(value.meta.ID)
+
+	log.Infof("===doStatusChangedEvent==========> [ID:%d]-[SE:%v]-[OSE:%v]", value.meta.ID, value.status, oldStatus)
 
 	if oldStatus == value.status {
 		return

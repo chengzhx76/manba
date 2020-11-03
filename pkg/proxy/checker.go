@@ -71,6 +71,7 @@ func (r *dispatcher) check(id uint64) {
 	status := metapb.Unknown
 	prev := r.getServerStatus(svr.meta.ID)
 
+	// 没有设置健康检查逻辑
 	if svr.meta.HeathCheck == nil {
 		log.Warnf("server <%d> heath check not setting", svr.meta.ID)
 		r.watchEventC <- &store.Evt{
@@ -78,7 +79,7 @@ func (r *dispatcher) check(id uint64) {
 			Type: eventTypeStatusChanged,
 			Value: statusChanged{
 				meta:   *svr.meta,
-				status: metapb.Up,
+				status: metapb.Up, // 默认为可用
 			},
 		}
 		return
@@ -91,6 +92,9 @@ func (r *dispatcher) check(id uint64) {
 		status = metapb.Down
 	}
 
+	log.Infof("===check==========> [ID:%d]-[%v]-[%v]", id, prev, status)
+
+	// 上一个状态不等于现在的检查状态
 	if prev != status {
 		r.watchEventC <- &store.Evt{
 			Src:  eventSrcStatusChanged,
@@ -103,7 +107,11 @@ func (r *dispatcher) check(id uint64) {
 	}
 }
 
+// 检查服务器真正逻辑
 func (r *dispatcher) doCheck(svr *serverRuntime) bool {
+
+	log.Infof("server <%d, %s> start check", svr.meta.ID, svr.getCheckURL())
+
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 

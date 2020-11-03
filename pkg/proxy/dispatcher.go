@@ -188,7 +188,7 @@ type dispatcher struct {
 	apis           map[uint64]*apiRuntime
 	clusters       map[uint64]*clusterRuntime
 	servers        map[uint64]*serverRuntime
-	binds          map[uint64]*binds
+	binds          map[uint64]*binds // 绑定的server
 	proxies        map[string]*metapb.Proxy
 	plugins        map[uint64]*metapb.Plugin
 	appliedPlugins *metapb.AppliedPlugins

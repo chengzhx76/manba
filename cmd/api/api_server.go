@@ -65,7 +65,7 @@ func main() {
 	// 初始化DB
 	db, err := store.GetStoreFrom(*addrStore, fmt.Sprintf("/%s", *namespace), *addrStoreUser, *addrStorePwd)
 	if err != nil {
-		log.Fatalf("init store failed for %s, errors:\n%+v", *addrStore, err)
+		log.Fatalf("init store failed for %s, errors:%+v", *addrStore, err)
 	}
 
 	// 服务关联db
