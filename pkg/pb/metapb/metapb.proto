@@ -53,7 +53,7 @@ enum RuleType {
 
 enum CMP {
     CMPEQ    = 0;
-	CMPLT    = 1;
+	  CMPLT    = 1;
 	CMPLE    = 2;
 	CMPGT    = 3;
 	CMPGE    = 4;
@@ -106,11 +106,11 @@ message HeathCheck {
 
 // CircuitBreaker circuit breaker
 message CircuitBreaker {
-    optional int64 closeTimeout       = 1 [(gogoproto.nullable) = false];
-    optional int32 halfTrafficRate    = 2 [(gogoproto.nullable) = false];
-	optional int64 rateCheckPeriod    = 3 [(gogoproto.nullable) = false];
-	optional int32 failureRateToClose = 4 [(gogoproto.nullable) = false];
-	optional int32 succeedRateToOpen  = 5 [(gogoproto.nullable) = false];
+    optional int64 closeTimeout       = 1 [(gogoproto.nullable) = false]; // 关闭检查间隔时间
+    optional int32 halfTrafficRate    = 2 [(gogoproto.nullable) = false]; // Half限流百分比
+	optional int64 rateCheckPeriod    = 3 [(gogoproto.nullable) = false]; // 熔断器检查周期
+	optional int32 failureRateToClose = 4 [(gogoproto.nullable) = false]; // Open -> Close的错误百分比
+	optional int32 succeedRateToOpen  = 5 [(gogoproto.nullable) = false]; // Half -> Open的成功百分比
 }
 
 // Server is a backend server that provide api
@@ -120,7 +120,7 @@ message Server {
     optional Protocol        protocol        = 3 [(gogoproto.nullable) = false];
     optional int64           maxQPS          = 4 [(gogoproto.nullable) = false];
     optional HeathCheck      heathCheck      = 5;
-    optional CircuitBreaker  circuitBreaker  = 6;
+    optional CircuitBreaker  circuitBreaker  = 6; // 熔断器
     optional int64           weight          = 7 [(gogoproto.nullable) = false];
     optional RateLimitOption rateLimitOption = 8 [(gogoproto.nullable) = false];
 }

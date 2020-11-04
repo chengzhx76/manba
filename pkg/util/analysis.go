@@ -9,6 +9,10 @@ import (
 	"manba/util/atomic"
 )
 
+/**
+各种指标分析
+*/
+
 type point struct {
 	requests          atomic.Int64
 	rejects           atomic.Int64
@@ -105,9 +109,7 @@ func (a *Analysis) AddTarget(key uint64, interval time.Duration) {
 	v, _ := a.recentlyPoints.Load(key)
 	vm := v.(*sync.Map)
 	if _, ok := vm.Load(interval); ok {
-		log.Infof("analysis: already added, key=<%d> interval=<%s>",
-			key,
-			interval)
+		log.Infof("analysis: already added, key=<%d> interval=<%s>", key, interval)
 		return
 	}
 

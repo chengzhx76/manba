@@ -245,7 +245,7 @@ func (r *dispatcher) addAPI(api *metapb.API) error {
 		}
 	}
 
-	if a.cb != nil {
+	if a.cb != nil { // 熔断器不为空
 		r.addAnalysis(api.ID, a.cb)
 	}
 
@@ -387,6 +387,7 @@ func (r *dispatcher) addAnalysis(id uint64, cb *metapb.CircuitBreaker) {
 	r.analysiser.RemoveTarget(id)
 	r.analysiser.AddTarget(id, time.Second)
 	if cb != nil {
+		// 熔断器检查周期
 		r.analysiser.AddTarget(id, time.Duration(cb.RateCheckPeriod))
 	}
 }
