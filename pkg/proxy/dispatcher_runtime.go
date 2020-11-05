@@ -450,14 +450,14 @@ func (a *apiRuntime) isUp() bool {
 }
 
 func (a *apiRuntime) matches(req *fasthttp.Request) bool {
-	if !a.isUp() {
+	if !a.isUp() { // api的生效状态
 		return false
 	}
 
 	switch a.matchRule() {
-	case metapb.MatchAll:
+	case metapb.MatchAll: // URLPattern && URLPattern && Method
 		return a.isDomainMatches(req) && a.isMethodMatches(req)
-	case metapb.MatchAny:
+	case metapb.MatchAny: // 匹配规则 URLPattern && (Domain || Method)
 		return a.isDomainMatches(req) || a.isMethodMatches(req)
 	default:
 		return a.isDomainMatches(req) || a.isMethodMatches(req)

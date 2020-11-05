@@ -52,8 +52,7 @@ func main() {
 	})
 
 	server.GET("/host", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Host in HTTP request header: "+c.Request().Host+" "+
-			"server:"+*addr)
+		return c.String(http.StatusOK, "Host in HTTP request header: "+c.Request().Host+" "+"server:"+*addr)
 	})
 
 	server.GET("/error", func(c echo.Context) error {

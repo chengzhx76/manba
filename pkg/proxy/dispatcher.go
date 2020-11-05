@@ -240,8 +240,10 @@ func (r *dispatcher) dispatch(reqCtx *fasthttp.RequestCtx, requestTag string) (*
 	exprCtx := acquireExprCtx()
 	exprCtx.Origin = req
 
+	// 获取要请求的 api id
 	id, ok := dispatcherRoute.Find(req.URI().Path(), hack.SliceToString(req.Header.Method()), exprCtx.AddParam)
 	if ok {
+		// 要请求的api（也是目标api）
 		if api, ok := r.apis[id]; ok && api.matches(req) {
 			targetAPI = api
 		}
@@ -257,8 +259,8 @@ func (r *dispatcher) dispatch(reqCtx *fasthttp.RequestCtx, requestTag string) (*
 		for idx, node := range targetAPI.nodes {
 			dn := acquireDispathNode()
 			dn.idx = idx
-			dn.api = targetAPI
 			dn.node = node
+			dn.api = targetAPI
 			dn.exprCtx = exprCtx
 			r.selectServer(reqCtx, dn, requestTag)
 			dispatches = append(dispatches, dn)
@@ -269,7 +271,7 @@ func (r *dispatcher) dispatch(reqCtx *fasthttp.RequestCtx, requestTag string) (*
 }
 
 func (r *dispatcher) selectServer(reqCtx *fasthttp.RequestCtx, dn *dispatchNode, requestTag string) {
-	dn.dest = r.selectServerFromCluster(reqCtx, dn.node.meta.ClusterID)
+	dn.dest = r.selectServerFromCluster(reqCtx, dn.node.meta.ClusterID) // 选择目标请求的 server
 	r.adjustByRouting(dn.api.meta.ID, reqCtx, dn, requestTag)
 }
 

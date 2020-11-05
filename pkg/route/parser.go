@@ -62,7 +62,7 @@ type parser struct {
 }
 
 func newParser(input []byte) *parser {
-	if len(input) > 1 && input[len(input)-1] == slash {
+	if len(input) > 1 && input[len(input)-1] == slash { // url中的最后一个 / 去掉
 		input = input[0 : len(input)-1]
 	}
 
