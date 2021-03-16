@@ -5,6 +5,8 @@ import (
 	"manba/pkg/filter"
 )
 
+// AccessFilter记录http访问日志
+
 // AccessFilter record the http access log
 // log format: $remoteip "$method $path" $code "$agent" $svr $cost
 type AccessFilter struct {

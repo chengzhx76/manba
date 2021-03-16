@@ -67,7 +67,7 @@ func (p *Proxy) newFilter(filterSpec *FilterSpec) (filter.Filter, error) {
 	case FilterWhiteList:
 		return newWhiteListFilter(), nil
 	case FilterRateLimiting:
-		return newRateLimitingFilter(), nil
+		return newRateLimitingFilter(), nil // 限流
 	case FilterCircuitBreake:
 		return newCircuitBreakeFilter(), nil
 	case FilterValidation:
@@ -85,6 +85,7 @@ func (p *Proxy) newFilter(filterSpec *FilterSpec) (filter.Filter, error) {
 	}
 }
 
+// 初始化外部的过滤器
 func newExternalFilter(filterSpec *FilterSpec) (filter.Filter, error) {
 	p, err := plugin.Open(filterSpec.ExternalPluginFile)
 	if err != nil {

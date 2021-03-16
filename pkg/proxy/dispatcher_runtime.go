@@ -60,6 +60,7 @@ func (c *clusterRuntime) updateMeta(meta *metapb.Cluster) {
 	c.lb = lb.NewLoadBalance(meta.LoadBalance)
 }
 
+// 进行负载均衡 返回服务的ID
 func (c *clusterRuntime) selectServer(req *fasthttp.RequestCtx, svrs []metapb.Server) uint64 {
 	return c.lb.Select(req, svrs)
 }
@@ -507,7 +508,7 @@ func (r *apiRule) validate(value []byte) bool {
 
 type routingRuntime struct {
 	meta    *metapb.Routing
-	barrier *util.RateBarrier
+	barrier *util.RateBarrier // 比率障碍
 }
 
 func newRoutingRuntime(meta *metapb.Routing) *routingRuntime {
@@ -535,19 +536,14 @@ func (a *routingRuntime) matches(apiID uint64, req *fasthttp.Request, requestTag
 
 	for _, c := range a.meta.Conditions {
 		if !conditionsMatches(&c, req) {
-			log.Debugf("%s: skip routing %s by condition %+v",
-				requestTag,
-				a.meta.Name,
-				c)
+			log.Debugf("%s: skip routing %s by condition %+v", requestTag, a.meta.Name, c)
 			return false
 		}
 	}
 
-	value := a.barrier.Allow()
+	value := a.barrier.Allow() // 按流量比例跳过路由
 	if !value {
-		log.Debugf("%s: skip routing %s by rate",
-			requestTag,
-			a.meta.Name)
+		log.Debugf("%s: skip routing %s by rate", requestTag, a.meta.Name)
 	}
 
 	return value
@@ -563,20 +559,20 @@ func conditionsMatches(cond *metapb.Condition, req *fasthttp.Request) bool {
 		return false
 	}
 
-	switch cond.Cmp {
-	case metapb.CMPEQ:
+	switch cond.Cmp { // 路由操作符 见图片 “路由匹配条件_1.png”
+	case metapb.CMPEQ: // 相等
 		return eq(attrValue, cond.Expect)
-	case metapb.CMPLT:
+	case metapb.CMPLT: // 小于
 		return lt(attrValue, cond.Expect)
-	case metapb.CMPLE:
+	case metapb.CMPLE: // 小于等于
 		return le(attrValue, cond.Expect)
-	case metapb.CMPGT:
+	case metapb.CMPGT: // 大于
 		return gt(attrValue, cond.Expect)
-	case metapb.CMPGE:
+	case metapb.CMPGE: // 大于等于
 		return ge(attrValue, cond.Expect)
-	case metapb.CMPIn:
+	case metapb.CMPIn: // in 包含
 		return in(attrValue, cond.Expect)
-	case metapb.CMPMatch:
+	case metapb.CMPMatch: // 开头匹配
 		return reg(attrValue, cond.Expect)
 	default:
 		return false

@@ -94,7 +94,7 @@ func NewProxy(cfg *Cfg) *Proxy {
 		jsEngine:      plugin.NewEngine(cfg.Option.EnableJSPlugin, FilterJSPlugin),
 	}
 
-	p.init()
+	p.init() // 过滤器也在这里初始化
 
 	return p
 }
@@ -105,7 +105,7 @@ func (p *Proxy) init() {
 		log.Fatalf("init route table failed, errors:%+v", err)
 	}
 
-	p.initFilters()
+	p.initFilters() // 初始化过滤器
 
 	// 注册已启动的 proxy
 	err = p.dispatcher.store.RegistryProxy(&metapb.Proxy{
@@ -393,7 +393,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 
 	filters := p.filters
 
-	// pre filters
+	// pre filters // 执行前置过滤器
 	filterName, code, err := p.doPreFilters(dn.requestTag, c, filters...)
 	if nil != err {
 		dn.err = err
@@ -492,6 +492,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 			log.Errorf("%s: dispatch node %d failed with error code %d", dn.requestTag, dn.idx, resCode)
 		}
 
+		// 执行异常过滤器
 		p.doPostErrFilters(c, resCode, err, filters...)
 
 		dn.err = err
@@ -505,7 +506,7 @@ func (p *Proxy) doProxy(dn *dispatchNode, adjustH func(*proxyContext)) {
 		log.Debugf("%s: dispatch node %d return by %s with code %d, body <%s>", dn.requestTag, dn.idx, svr.meta.Addr, res.StatusCode(), hack.SliceToString(res.Body()))
 	}
 
-	// post filters
+	// post filters // 执行后置过滤器
 	filterName, code, err = p.doPostFilters(dn.requestTag, c, filters...)
 	if nil != err {
 		log.Errorf("%s: dispatch node %d call filter %s post failed with error %s", dn.requestTag, dn.idx, filterName, err)

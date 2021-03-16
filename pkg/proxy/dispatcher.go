@@ -282,7 +282,7 @@ func (r *dispatcher) adjustByRouting(apiID uint64, reqCtx *fasthttp.RequestCtx, 
 		if routing.isUp() && routing.matches(apiID, &reqCtx.Request, requestTag) {
 			log.Infof("%s: match routing %s, %s traffic to cluster %d", requestTag, routing.meta.Name, routing.meta.Status.String(), routing.meta.ClusterID)
 
-			svr := r.selectServerFromCluster(reqCtx, routing.meta.ClusterID)
+			svr := r.selectServerFromCluster(reqCtx, routing.meta.ClusterID) // 如果匹配路由选择对应的 路由对应的集群 ID 见图 路由对应的集群.png
 
 			switch routing.meta.Strategy {
 			case metapb.Split:
@@ -295,6 +295,7 @@ func (r *dispatcher) adjustByRouting(apiID uint64, reqCtx *fasthttp.RequestCtx, 
 	}
 }
 
+// 选着调用的服务器
 func (r *dispatcher) selectServerFromCluster(ctx *fasthttp.RequestCtx, id uint64) *serverRuntime {
 	cluster, ok := r.clusters[id]
 	if !ok {

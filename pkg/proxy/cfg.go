@@ -70,18 +70,22 @@ func ParseFilter(filter string) (*FilterSpec, error) {
 
 	switch len(specs) {
 	case 1:
-		return &FilterSpec{Name: specs[0]}, nil
+		return &FilterSpec{
+			Name: specs[0],
+		}, nil
 	case 2:
 		return &FilterSpec{
 			Name:               specs[0],
 			External:           true,
-			ExternalPluginFile: specs[1]}, nil
+			ExternalPluginFile: specs[1],
+		}, nil
 	case 3:
 		return &FilterSpec{
 			Name:               specs[0],
 			External:           true,
 			ExternalPluginFile: specs[1],
-			ExternalCfg:        specs[2]}, nil
+			ExternalCfg:        specs[2],
+		}, nil
 	default:
 		return nil, fmt.Errorf("error format: %s", filter)
 	}

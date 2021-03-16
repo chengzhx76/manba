@@ -54,7 +54,7 @@ var (
 	limitBufferRead               = flag.Int("limit-buf-read", 2048, "Limit(bytes): Bytes for read buffer size")
 	limitBufferWrite              = flag.Int("limit-buf-write", 1024, "Limit(bytes): Bytes for write buffer size")
 	limitBytesBodyMB              = flag.Int("limit-body", 10, "Limit(MB): MB for body size")
-	limitBytesCachingMB           = flag.Uint64("limit-caching", 64, "Limit(MB): MB for caching size")
+	limitBytesCachingMB           = flag.Uint64("limit-caching", 64, "Limit(MB): MB for caching size") // 缓存空间大小
 	ttlProxy                      = flag.Int64("ttl-proxy", 10, "TTL(secs): proxy")
 	version                       = flag.Bool("version", false, "Show version info")
 
